@@ -1,0 +1,547 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>大数据环境搭建-zookeeper | 稻子网博客</title>
+  <meta name="author" content="AhahaGe">
+  
+  <meta name="description" content="稻子网博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="大数据环境搭建-zookeeper"/>
+  <meta property="og:site_name" content="稻子网博客"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.ico" rel="icon">
+  
+
+  <!-- CSS -->
+
+
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">稻子网博客</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>文章归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/message" title="All the tags.">
+			  <i class="fa fa-pencil"></i>给我留言
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-info-circle"></i>关于本站
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+		<!-- content -->
+
+		<div class="slogan" style="margin-bottom: 17px">
+		  <h4 style="margin-top: 0;color: #333;font-size:15px;font-weight: normal;">
+			  当前位置&nbsp;:&nbsp;<a href="/" >首页&nbsp;</a>»&nbsp;文章分类&nbsp;:&nbsp;
+			
+				<a href="/categories/大数据/">大数据</a>
+			
+		  &nbsp;</a>»&nbsp; 大数据环境搭建-zookeeper </h4>
+		</div>
+
+		<div id="top_search"></div>
+				 
+		
+
+		<div class="archive">	  
+			<div id="archives"> 
+				
+				<header class="entry-header">
+					<div class="entry-info" text-transform : capitalize>				     					      	      
+							
+						<span class="entry-date">
+							<span class="fa fa-calendar" aria-hidden="true"></span>
+							2016-07-18						      
+						</span>
+							  
+							  
+						<span class="author vcard">
+							<span class="fa fa-user" aria-hidden="true"></span>
+							<a href="/">AhahaGe</a> 	 	
+						</span>
+
+						<span class="comments-link">
+							<span class="fa fa-comments" aria-hidden="true"></span>
+							<span class="ds-thread-count" data-thread-key="2016/07/18/大数据环境搭建-zookeeper/">暂无评论</span>
+						</span>						
+							
+					</div>	
+
+									
+					<h3 class="entry-title"> 
+						<a href="/2016/07/18/大数据环境搭建-zookeeper/" >大数据环境搭建-zookeeper</a>
+					</h3>		
+						
+					<span style="font-size:15px"><h1 id="what"><a href="#what" class="headerlink" title="what"></a>what</h1><p>   本文仅描述如何在多台机器上部署zookeeper集群并会在某些场景中描述为什么需要这么做。<br>   主要参考 <a href="https://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html#ch_administration" target="_blank" rel="external">A Guide to Deployment and Administration</a>，你也可以查看这个网页获取更多信息。<br><a id="more"></a></p>
+<h1 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h1><ol>
+<li>三台在同一个内网的测试机,系统是64位centos6.5+，最好可以访问外网。</li>
+<li>请参照<a href="http://blog.oryza.cn/2015/05/27/centos6-5%E5%9F%BA%E6%9C%AC%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">centos6.5基本开发环境搭建</a>安装并配置jdk环境。</li>
+</ol>
+<hr>
+<h1 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h1><ol>
+<li>root用户下，去zookeeper官网下载对应版本的安装包放到/root/opt/目录下，解压tar -zxvf </li>
+<li>在conf目录下，创建java.env，并增加export JVMFLAGS=”-Xmx4048m”内容并可以在启动后用jmap -heap zookeeper_pid | $ java -XX:+PrintFlagsFinal Q |grep HeapSize | jcmd pid GC.heap_dump filename=pidHeap来查看zookeeper堆内存的使用情况。</li>
+<li>在一个专门的硬盘设备上创建一个数据文件夹dataDir，在这个目录下创建一个myid文件，在这个文件中输入一个1到255的数字，集群内的id不允许重复。</li>
+<li>在另一个专门的硬盘设备上创建一个日志文件夹dataLogDir。</li>
+<li>在conf目录下，根据zoo_sample.cfg拷贝一个zoo.cfg文件，并修改其中的一些参数。<br> a. server.X = hostname1:2888:3888 server.2 = hostname2:2888:3888<br> 2888：follow和follow之间，follow和leader相互通信的端口。<br> 3888：follow选举leader的端口。<br> b. dataDir = 3中创建的dataDir  存储快照文件snapshot的目录。默认情况下，事务日志也会存储在这里。建议同时配置参数dataLogDir, 事务日志的写性能直接影响zk性能。<br> c. dataLogDir = 4中创建的dataLogDir  事务日志输出目录。尽量给事务日志的输出配置单独的磁盘或是挂载点，这将极大的提升ZK性能。<br> d. tickTime: ZooKeeper使用的基本时间单位(毫秒). 它被用来做心跳测试，最小的会话超时时间是它的两倍大小。<br> e. dataDir: 用来存放内存数据库的快照，如果没有特别说明，还有数据库更新的事务日志。<br> f. clientPort: 监听客户端连接的端口。<br> g. initLimit: Follow节点在启动的过程中会从Leader节点同步数据，Leader允许Follow在initLimit时间内完成。<br> h. syncLimit:  限制一个Follow节点可以多久时间不与leader节点通信。例如心跳，多久时间必须回复leader。<br> i. autopurge.purgeInterval: 3.4版本以后，配置事务日志和快照文件的自动清理的频率(小时)，默认0不清理，需要配置一个正整数。<br> j. autopurge.snapRetainCount: 和purgeInterval参数一起使用，用来指定需要保留的文件数目。</li>
+<li>start your server ./zkServer.sh start</li>
+<li>在不同的机器上重复1-6步骤，注意myid是不同的。</li>
+<li>Verify install<br>  a. jps<br>  b. ps aux|grep Q/zoo<br>  c. ./zkServer.sh status<br>  d. .zkCli.sh</li>
+<li>zk基本操作：<ol>
+<li>create /zk_test my_data</li>
+<li>ls /</li>
+<li>set /zk_test my2_data</li>
+<li>get /zk_test</li>
+<li>delete /zk_test my_data</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="The-Data-Directory"><a href="#The-Data-Directory" class="headerlink" title="The Data Directory"></a>The Data Directory</h2><p>   This directory has two files in it:<br>    myid - contains a single integer in human readable ASCII text that represents the server id. snapshot.<br>    <zxid> - holds the fuzzy snapshot of a data tree.</zxid></p>
+<p>   Each ZooKeeper server has a unique id. This id is used in two places: the myid file and the configuration file. The myid file identifies the server that corresponds to the given data directory. The configuration file lists the contact information for each server identified by its server id. When a ZooKeeper server instance starts, it reads its id from the myid file and then, using that id, reads from the configuration file, looking up the port on which it should listen.</p>
+<p>   The snapshot files stored in the data directory are fuzzy snapshots in the sense that during the time the ZooKeeper server is taking the snapshot, updates are occurring to the data tree. The suffix of the snapshot file names is the zxid, the ZooKeeper transaction id, of the last committed transaction at the start of the snapshot. Thus, the snapshot includes a subset of the updates to the data tree that occurred while the snapshot was in process. The snapshot, then, may not correspond to any data tree that actually existed, and for this reason we refer to it as a fuzzy snapshot. Still, ZooKeeper can recover using this snapshot because it takes advantage of the idempotent nature of its updates. By replaying the transaction log against fuzzy snapshots ZooKeeper gets the state of the system at the end of the log.</p>
+<h2 id="The-Log-Directory"><a href="#The-Log-Directory" class="headerlink" title="The Log Directory"></a>The Log Directory</h2><p>   The Log Directory contains the ZooKeeper transaction logs. Before any update takes place, ZooKeeper ensures that the transaction that represents the update is written to non-volatile storage. A new log file is started each time a snapshot is begun. The log file’s suffix is the first zxid written to that log.</p>
+<p>File Management<br>   The format of snapshot and log files does not change between standalone ZooKeeper servers and different configurations of replicated ZooKeeper servers. Therefore, you can pull these files from a running replicated ZooKeeper server to a development machine with a stand-alone ZooKeeper server for trouble shooting.</p>
+<p>   Using older log and snapshot files, you can look at the previous state of ZooKeeper servers and even restore that state. The LogFormatter class allows an administrator to look at the transactions in a log.</p>
+<p>   The ZooKeeper server creates snapshot and log files, but never deletes them. The retention policy of the data and log files is implemented outside of the ZooKeeper server. The server itself only needs the latest complete fuzzy snapshot and the log files from the start of that snapshot. See the maintenancesection in this document for more details on setting a retention policy and maintenance of ZooKeeper storage.</p>
+<hr>
+<figure class="highlight plain"><figcaption><span>Note</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">The data stored in these files is not encrypted. In the case of storing sensitive data </div><div class="line">in ZooKeeper, necessary measures need to be taken to prevent unauthorized access. Such </div><div class="line">measures are external to ZooKeeper (e.g., control access to the files) and depend on </div><div class="line">the individual settings in which it is being deployed.</div></pre></td></tr></table></figure>
+<h2 id="Things-to-Avoid"><a href="#Things-to-Avoid" class="headerlink" title="Things to Avoid"></a>Things to Avoid</h2><p>Here are some common problems you can avoid by configuring ZooKeeper correctly:</p>
+<h3 id="inconsistent-lists-of-servers"><a href="#inconsistent-lists-of-servers" class="headerlink" title="inconsistent lists of servers"></a>inconsistent lists of servers</h3><p>   The list of ZooKeeper servers used by the clients must match the list of ZooKeeper servers that each ZooKeeper server has. Things work okay if the client list is a subset of the real list, but things will really act strange if clients have a list of ZooKeeper servers that are in different ZooKeeper clusters. Also, the server lists in each Zookeeper server configuration file should be consistent with one another.</p>
+<h3 id="incorrect-placement-of-transasction-log"><a href="#incorrect-placement-of-transasction-log" class="headerlink" title="incorrect placement of transasction log"></a>incorrect placement of transasction log</h3><p>   The most performance critical part of ZooKeeper is the transaction log. ZooKeeper syncs transactions to media before it returns a response. A dedicated transaction log device is key to consistent good performance. Putting the log on a busy device will adversely effect performance. If you only have one storage device, put trace files on NFS and increase the snapshotCount; it doesn’t eliminate the problem, but it should mitigate it.</p>
+<h3 id="incorrect-Java-heap-size"><a href="#incorrect-Java-heap-size" class="headerlink" title="incorrect Java heap size"></a>incorrect Java heap size</h3><p>   You should take special care to set your Java max heap size correctly. In particular, you should not create a situation in which ZooKeeper swaps to disk. The disk is death to ZooKeeper. Everything is ordered, so if processing one request swaps the disk, all other queued requests will probably do the same. the disk. DON’T SWAP.</p>
+<p>   Be conservative in your estimates: if you have 4G of RAM, do not set the Java max heap size to 6G or even 4G. For example, it is more likely you would use a 3G heap for a 4G machine, as the operating system and the cache also need memory. The best and only recommend practice for estimating the heap size your system needs is to run load tests, and then make sure you are well below the usage limit that would cause the system to swap.</p>
+<h2 id="Best-Practice"><a href="#Best-Practice" class="headerlink" title="Best Practice"></a>Best Practice</h2><ol>
+<li>2f+1台机器，最好5台，3台也可以 容错 参考下面的Designing a ZooKeeper Deployment</li>
+<li>log目录    两个目录最好在不同的目录下，并且log和data目录分别在一个专用的磁盘设备下<br>To get low latencies on updates it is important to have a dedicated transaction log directory.</li>
+<li>java heap size   if machine is 4G, we can set 3G  This is very important to avoid swapping, which will seriously degrade ZooKeeper performance.</li>
+<li>版本用比较新一点的好，feature多</li>
+</ol>
+</span>
+				</header>
+
+				<!-- share -->
+				
+					
+
+					
+     <footer class="entry-meta">      
+
+	    <div class="fenlei" style="font-size:13.5px">
+			<span class="entry-categories">
+				<span class="fa fa-folder" aria-hidden="true"></span> 
+
+				
+					<a href="/categories/大数据/">大数据</a>
+				
+
+			</span>
+			
+			<span class="entry-tags">        
+				<span class="fa fa-tags" aria-hidden="true"></span> 
+
+				
+					<a href="/tags/大数据/">大数据</a>&nbsp;
+				
+					<a href="/tags/zookeeper/">zookeeper</a>&nbsp;
+				
+
+			</span>
+		</div>
+
+     
+		<!-- JiaThis Button BEGIN -->
+		<div class="jiathis_style" style="float:right;">
+			<span class="jiathis_txt">分享到：</span>
+			<a class="jiathis_button_qzone">QQ空间</a>
+			<a class="jiathis_button_tsina">新浪微博</a>
+			<a class="jiathis_button_weixin">微信</a>
+			<a class="jiathis_button_copy">复制</a>
+			<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+			<a class="jiathis_counter_style"></a>
+		</div>
+		<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+		<!-- JiaThis Button END -->
+		<br>
+    </footer>
+
+
+				
+			</div>	
+		</div>	 	        
+
+		 
+				
+					<p class="p1">上一篇 <a href="/2016/07/18/大数据环境搭建-redis/">大数据环境搭建-redis</a></p> 
+
+				
+				   <p class="p2">下一篇 <a href="/2016/07/14/hello-world/">Hello World</a></p> 
+			
+		
+		<!-- comment -->
+		
+<section id="comment">
+  
+  	 <div class="ds-thread" data-thread-key="2016/07/18/大数据环境搭建-zookeeper/" data-title="大数据环境搭建-zookeeper" data-url="http://blog.oryza.cn/2016/07/18/大数据环境搭建-zookeeper/"></div>  
+  
+</section>
+
+		
+	</div> <!-- col-md-9/col-md-12 -->	
+
+	
+		<div id="side_meta">
+			
+      <div class="col-md-3">
+	      <div id="sidebar">
+	      
+  <div class="form-group has-success has-feedback" id="site_search">
+    <form class="site-search-form">
+        <input type="text" id="st-search-input" name="q" results="0" placeholder="搜索" class="st-search-input st-default-search-input form-control" />
+    </form>
+  </div>  
+
+	      <style type="text/css">
+  .cls_container{height:24px;overflow:hidden;}
+  .cls_container ul{list-style-type:none;margin:0;padding:0;margin-left:0px;}
+  .cls_container ul li{height:24px;line-height:24px;float:left;display:inline;}
+</style>
+
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">本站公告</h4>
+
+	<div id="myscroll" class="cls_container">
+		<ul>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		</ul>
+	</div>
+
+	<div id="showhint"></div>
+</div>
+
+<script type="text/javascript">
+	function $(element){
+	 if(arguments.length>1){
+	  for(var i=0,length=arguments.length,elements=[];i<length;i++){
+	   elements.push($(arguments[i]));
+	  }
+	  return elements;
+	 }
+	 if(typeof element=="string"){
+	  return document.getElementById(element);
+	 }else{
+	  return element;
+	 }
+	}
+	var Class={
+	 create:function(){
+	  return function(){
+	   this.initialize.apply(this,arguments);
+	  }
+	 }
+	}
+	Function.prototype.bind=function(object){
+	 var method=this;
+	 return function(){
+	  method.apply(object,arguments);
+	 }
+	}
+	var Scroll=Class.create();
+	Scroll.prototype={
+	 initialize:function(element,height){
+	  this.element=$(element);
+	  this.element.innerHTML+=this.element.innerHTML;
+	  this.height=height;
+	  this.maxHeight=this.element.scrollHeight/2;
+	  this.counter=0;
+	  this.scroll();
+	  this.timer="";
+	  this.element.onmouseover=this.stop.bind(this);
+	  this.element.onmouseout=function(){this.timer=setTimeout(this.scroll.bind(this),1000);}.bind(this);
+	 },
+	 scroll:function(){
+	  if(this.element.scrollTop<this.maxHeight){
+	   this.element.scrollTop++;
+	   this.counter++;
+	  }else{
+	   this.element.scrollTop=0;
+	   this.counter=0;
+	  }
+	  if(this.counter<this.height){
+	   this.timer=setTimeout(this.scroll.bind(this),20);
+	  }else{
+	   this.counter=0;
+	   this.timer=setTimeout(this.scroll.bind(this),3000);
+	  }
+	 },
+	 stop:function(){
+	  clearTimeout(this.timer);
+	 }
+	}
+	var myscroll=new Scroll("myscroll",24);
+</script>
+
+
+	      <!-- toc -->	      
+	      	      
+
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">分类目录</h4>
+		<ul class="tag_box inline list-unstyled">
+		
+			<li><a href="/categories/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/categories/python/">python<span>1</span></a></li>
+		
+			<li><a href="/categories/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/categories/坑/">坑<span>1</span></a></li>
+		
+			<li><a href="/categories/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/categories/并发学习/">并发学习<span>1</span></a></li>
+		
+			<li><a href="/categories/我的翻译/">我的翻译<span>1</span></a></li>
+		
+			<li><a href="/categories/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/categories/测试/">测试<span>1</span></a></li>
+		
+			<li><a href="/categories/项目经验/">项目经验<span>2</span></a></li>
+		
+		</ul>
+	</div>
+	
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333 ">标签云</h4>
+		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/性能监控/">性能监控<span>1</span></a></li>
+		
+			<li><a href="/tags/ab/">ab<span>1</span></a></li>
+		
+			<li><a href="/tags/kafka/">kafka<span>1</span></a></li>
+		
+			<li><a href="/tags/并发/">并发<span>1</span></a></li>
+		
+			<li><a href="/tags/redis，缓存/">redis，缓存<span>1</span></a></li>
+		
+			<li><a href="/tags/zookeeper/">zookeeper<span>1</span></a></li>
+		
+			<li><a href="/tags/单点登录/">单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/性能测试/">性能测试<span>1</span></a></li>
+		
+			<li><a href="/tags/which/">which<span>1</span></a></li>
+		
+			<li><a href="/tags/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/tags/JVM，垃圾收集器，HotSpot/">JVM，垃圾收集器，HotSpot<span>1</span></a></li>
+		
+			<li><a href="/tags/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/tags/hadoop/">hadoop<span>1</span></a></li>
+		
+			<li><a href="/tags/EJB-EntityManager-JPA-Datasource/">EJB EntityManager JPA Datasource<span>1</span></a></li>
+		
+			<li><a href="/tags/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/tags/服务器架构/">服务器架构<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结，单点登录/">项目总结，单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/storm/">storm<span>1</span></a></li>
+		
+			<li><a href="/tags/elasticsearch/">elasticsearch<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>21</span></a></li>
+		 
+		</ul>
+	</div>
+
+
+	      
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">友情链接</h4>
+	<ul class="blogroll list-unstyled">
+	
+		<li style="font-size:14px"><i class="fa fa-share"></i><a href="http://hexo.io" title="Hexo site." target="_blank"]);">Hexo</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-github"></i><a href="https://github.com/AhahaGe" title="My Github account." target="_blank"]);">我的github</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-cloud-upload"></i><a href="http://www.qiniu.com" title="My Weibo account." target="_blank"]);">七牛云存储</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-chain"></i><a href="https://github.com/rudy-yuan/free2mind" title="free2mind theme." target="_blank"]);">Hexo-Theme-Free2mind</a></li>
+	
+	</ul>
+</div>
+
+
+	      <div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">近期评论</h4>
+	<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="0" data-show-admin="1" data-excerpt-length="100" ></ul>
+	
+	<script type="text/javascript">
+	    var duoshuoQuery = { short_name: 'blogoryza' };
+	    (function() {
+	    var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+
+</div>
+
+
+	
+	      <section id="recent-visitors" class="widget widget_recent_comments">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">最近访客</h4>
+  	<div class="panelbody clearfix"><ul class="ds-recent-visitors" data-num-items="30"></ul></div>
+</section>    
+	      </div> <!-- sidebar -->
+      </div> <!-- col-md-3 -->
+
+		</div>
+			
+
+</div><!-- row -->
+
+
+	<script type="text/javascript">
+	  var duoshuoQuery = { short_name: 'blogoryza' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  AhahaGe &copy; 2015-2016.
+  
+       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, <a href="https://swiftype.com/" target="_blank">Swiftype</a> and <a href="http://www.qiniu.com/" target="_blank">七牛云存储</a>.
+      <i class="fa fa-sitemap %>"></i> <a href="/sitemap.xml" target="_blank"> 站点地图</a>. <a href="http://www.miitbeian.gov.cn/">浙ICP备14039723号-1</a>.
+      
+      
+      <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259907039'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1259907039%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WSRpFx1x7aC6s9oHyBKz','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>

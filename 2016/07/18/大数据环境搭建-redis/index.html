@@ -1,0 +1,536 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>大数据环境搭建-redis | 稻子网博客</title>
+  <meta name="author" content="AhahaGe">
+  
+  <meta name="description" content="稻子网博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="大数据环境搭建-redis"/>
+  <meta property="og:site_name" content="稻子网博客"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.ico" rel="icon">
+  
+
+  <!-- CSS -->
+
+
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">稻子网博客</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>文章归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/message" title="All the tags.">
+			  <i class="fa fa-pencil"></i>给我留言
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-info-circle"></i>关于本站
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+		<!-- content -->
+
+		<div class="slogan" style="margin-bottom: 17px">
+		  <h4 style="margin-top: 0;color: #333;font-size:15px;font-weight: normal;">
+			  当前位置&nbsp;:&nbsp;<a href="/" >首页&nbsp;</a>»&nbsp;文章分类&nbsp;:&nbsp;
+			
+				<a href="/categories/大数据/">大数据</a>
+			
+		  &nbsp;</a>»&nbsp; 大数据环境搭建-redis </h4>
+		</div>
+
+		<div id="top_search"></div>
+				 
+		
+
+		<div class="archive">	  
+			<div id="archives"> 
+				
+				<header class="entry-header">
+					<div class="entry-info" text-transform : capitalize>				     					      	      
+							
+						<span class="entry-date">
+							<span class="fa fa-calendar" aria-hidden="true"></span>
+							2016-07-18						      
+						</span>
+							  
+							  
+						<span class="author vcard">
+							<span class="fa fa-user" aria-hidden="true"></span>
+							<a href="/">AhahaGe</a> 	 	
+						</span>
+
+						<span class="comments-link">
+							<span class="fa fa-comments" aria-hidden="true"></span>
+							<span class="ds-thread-count" data-thread-key="2016/07/18/大数据环境搭建-redis/">暂无评论</span>
+						</span>						
+							
+					</div>	
+
+									
+					<h3 class="entry-title"> 
+						<a href="/2016/07/18/大数据环境搭建-redis/" >大数据环境搭建-redis</a>
+					</h3>		
+						
+					<span style="font-size:15px"><h1 id="what"><a href="#what" class="headerlink" title="what"></a>what</h1><p>&#160; &#160; &#160; &#160;Redis is an open source (BSD licensed), in-memory data structure store, used as database, cache and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs and geospatial indexes with radius queries. Redis has built-in <a href="http://redis.io/topics/replication" target="_blank" rel="external">replication</a>, <a href="http://redis.io/commands/eval" target="_blank" rel="external">Lua scripting</a>, <a href="http://redis.io/topics/lru-cache" target="_blank" rel="external">LRU eviction</a>, <a href="http://redis.io/topics/transactions" target="_blank" rel="external">transactions</a> and different levels of <a href="http://redis.io/topics/persistence" target="_blank" rel="external">on-disk persistence</a>, and provides high availability via <a href="http://redis.io/topics/sentinel" target="_blank" rel="external">Redis Sentinel</a> and automatic partitioning with <a href="http://redis.io/topics/cluster-tutorial" target="_blank" rel="external">Redis Cluster</a>. 本文仅描述如何部署redis using an init script，主要参考了<a href="http://redis.io/topics/quickstart" target="_blank" rel="external">redis quickstart</a>。<br>    <a id="more"></a></p>
+<h1 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h1><p>&#160; &#160; &#160; &#160;A computer with a working GCC compiler and libc。</p>
+<hr>
+<h1 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h1><p>&#160; &#160; &#160; &#160;<strong>1.</strong> Download latest stable <a href="http://download.redis.io/redis-stable.tar.gz" target="_blank" rel="external">redis</a> and tar &amp; cd &amp; make.<br>&#160; &#160; &#160; &#160;At this point you can try if your build works correctly by typing make test, but this is an optional step. After the compilation the src directory inside the Redis distribution is populated with the different executables that are part of Redis:</p>
+<ul>
+<li>redis-server is the Redis Server itself.</li>
+<li>redis-sentinel is the Redis Sentinel executable (monitoring and failover).</li>
+<li>redis-cli is the command line interface utility to talk with Redis.</li>
+<li>redis-benchmark is used to check Redis performances.</li>
+<li>redis-check-aof and redis-check-dump are useful in the rare event of corrupted data files.</li>
+</ul>
+<p>&#160; &#160; &#160; &#160;<strong>2.</strong> It is a good idea to copy both the Redis server and the command line interface in proper places, either manually using the following commands: <code>cp src/redis-server /usr/local/bin/</code> <code>cp src/redis-cli /usr/local/bin/</code>.<br>&#160; &#160; &#160; &#160;In the following documentation we assume that /usr/local/bin is in your PATH environment variable so that you can execute both the binaries without specifying the full path.</p>
+<p>&#160; &#160; &#160; &#160;<strong>3.</strong> Create a directory where to store your Redis config files and your data: <code>mkdir /etc/redis /var/redis</code><br>&#160; &#160; &#160; &#160;<strong>4.</strong> Copy the init script that you’ll find in the Redis distribution under the utils directory into /etc/init.d. We suggest calling it with the name of the port where you are running this instance of Redis. For example:<br><code>cp utils/redis_init_script /etc/init.d/redis_6379</code> and then edit the script <code>vi /etc/init.d/redis_6379</code>. Make sure to modify REDISPORT accordingly to the port you are using. Both the pid file path and the configuration file name depend on the port number.<br>&#160; &#160; &#160; &#160;<strong>5.</strong> Copy the template configuration file you’ll find in the root directory of the Redis distribution into /etc/redis/ using the port number as name, for instance:<code>cp redis.conf /etc/redis/6379.conf</code>.<br>&#160; &#160; &#160; &#160;<strong>6.</strong> Create a directory inside /var/redis that will work as data and working directory for this Redis instance:<code>mkdir /var/redis/6379</code>.<br>&#160; &#160; &#160; &#160;<strong>7.</strong> Edit the configuration file, making sure to perform the following changes:</p>
+<blockquote>
+<p>Set daemonize to yes (by default it is set to no).<br>Set the pidfile to /var/run/redis_6379.pid (modify the port if needed).<br>Change the port accordingly. In our example it is not needed as the default port is already 6379.<br>Set your preferred loglevel.<br>Set the logfile to /var/log/redis_6379.log<br>Set the dir to /var/redis/6379 (very important step!).</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160;<strong>8.</strong> Finally add the new Redis init script to all the default runlevels using the following command:<code>update-rc.d redis_6379 defaults</code>. You are done! Now you can try running your instance with:<code>/etc/init.d/redis_6379 start</code>.</p>
+<p>Make sure that everything is working as expected:</p>
+<blockquote>
+<p>Try pinging your instance with redis-cli.<br>Do a test save with redis-cli save and check that the dump file is correctly stored into /var/redis/6379/ (you should find a file called dump.rdb).<br>Check that your Redis instance is correctly logging in the log file.<br>If it’s a new machine where you can try it without problems make sure that after a reboot everything is still working.</p>
+</blockquote>
+<h1 id="Check-if-Redis-is-working"><a href="#Check-if-Redis-is-working" class="headerlink" title="Check if Redis is working"></a>Check if Redis is working</h1><p>&#160; &#160; &#160; &#160;External programs talk to Redis using a TCP socket and a Redis specific protocol. This protocol is implemented in the Redis client libraries for the different programming languages. However to make hacking with Redis simpler Redis provides a command line utility that can be used to send commands to Redis. This program is called redis-cli. The first thing to do in order to check if Redis is working properly is sending a PING command using redis-cli: <code>redis-cli ping</code>. if PONG then is ok.</p>
+<h1 id="Securing-Redis"><a href="#Securing-Redis" class="headerlink" title="Securing Redis"></a>Securing Redis</h1><p>&#160; &#160; &#160; &#160;By default Redis binds to all the interfaces and has no authentication at all. If you use Redis into a very controlled environment, separated from the external internet and in general from attackers, that’s fine. However if Redis without any hardening is exposed to the internet, it is a big security concern. If you are not 100% sure your environment is secured properly, please check the following steps in order to make Redis more secure, which are enlisted in order of increased security.</p>
+<ul>
+<li>Make sure the port Redis uses to listen for connections (by default 6379 and additionally 16379 if you run Redis in cluster mode, plus 26379 for Sentinel) is firewalled, so that it is not possible to contact Redis from the outside world.</li>
+<li>Use a configuration file where the bind directive is set in order to guarantee that Redis listens just in as little network interfaces you are using. For example only the loopback interface (127.0.0.1) if you are accessing Redis just locally from the same computer, and so forth.</li>
+<li>Use the requirepass option in order to add an additional layer of security so that clients will require to authenticate using the AUTH command.</li>
+<li>Use spiped or another SSL tunnelling software in order to encrypt traffic between Redis servers and Redis clients if your environment requires encryption.<br>Note that a Redis exposed to the internet without any security is very simple to exploit, so make sure you understand the above and apply at least a firewalling layer. After the firewalling is in place, try to connect with redis-cli from an external host in order to prove yourself the instance is actually not reachable.</li>
+</ul>
+<blockquote>
+<p>Note that a Redis exposed to the internet without any security is very simple to exploit, so make sure you understand the above and apply at least a firewalling layer. After the firewalling is in place, try to connect with redis-cli from an external host in order to prove yourself the instance is actually not reachable.</p>
+</blockquote>
+<h1 id="note"><a href="#note" class="headerlink" title="note"></a>note</h1><p>&#160; &#160; &#160; &#160;In the above instructions we skipped many Redis configuration parameters that you would like to change, for instance in order to use AOF persistence instead of RDB persistence, or to setup replication, and so forth. Make sure to read the example redis.conf file (that is heavily commented) and the other documentation you can find in this web site for more information.</p>
+<h1 id="links"><a href="#links" class="headerlink" title="links"></a>links</h1><p><a href="http://redis.io/topics/data-types-intro" target="_blank" rel="external">An introduction to Redis data types and abstractions</a><br><a href="http://redis.io/topics/persistence" target="_blank" rel="external">Persistence</a><br><a href="http://try.redis.io/" target="_blank" rel="external">Interactive tutorial</a></p>
+</span>
+				</header>
+
+				<!-- share -->
+				
+					
+
+					
+     <footer class="entry-meta">      
+
+	    <div class="fenlei" style="font-size:13.5px">
+			<span class="entry-categories">
+				<span class="fa fa-folder" aria-hidden="true"></span> 
+
+				
+					<a href="/categories/大数据/">大数据</a>
+				
+
+			</span>
+			
+			<span class="entry-tags">        
+				<span class="fa fa-tags" aria-hidden="true"></span> 
+
+				
+					<a href="/tags/大数据/">大数据</a>&nbsp;
+				
+					<a href="/tags/redis/">redis</a>&nbsp;
+				
+
+			</span>
+		</div>
+
+     
+		<!-- JiaThis Button BEGIN -->
+		<div class="jiathis_style" style="float:right;">
+			<span class="jiathis_txt">分享到：</span>
+			<a class="jiathis_button_qzone">QQ空间</a>
+			<a class="jiathis_button_tsina">新浪微博</a>
+			<a class="jiathis_button_weixin">微信</a>
+			<a class="jiathis_button_copy">复制</a>
+			<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+			<a class="jiathis_counter_style"></a>
+		</div>
+		<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+		<!-- JiaThis Button END -->
+		<br>
+    </footer>
+
+
+				
+			</div>	
+		</div>	 	        
+
+		 
+				
+					<p class="p1">上一篇 <a href="/2016/07/18/大数据环境搭建-kafka/">大数据环境搭建-kafka</a></p> 
+
+				
+				   <p class="p2">下一篇 <a href="/2016/07/18/大数据环境搭建-zookeeper/">大数据环境搭建-zookeeper</a></p> 
+			
+		
+		<!-- comment -->
+		
+<section id="comment">
+  
+  	 <div class="ds-thread" data-thread-key="2016/07/18/大数据环境搭建-redis/" data-title="大数据环境搭建-redis" data-url="http://blog.oryza.cn/2016/07/18/大数据环境搭建-redis/"></div>  
+  
+</section>
+
+		
+	</div> <!-- col-md-9/col-md-12 -->	
+
+	
+		<div id="side_meta">
+			
+      <div class="col-md-3">
+	      <div id="sidebar">
+	      
+  <div class="form-group has-success has-feedback" id="site_search">
+    <form class="site-search-form">
+        <input type="text" id="st-search-input" name="q" results="0" placeholder="搜索" class="st-search-input st-default-search-input form-control" />
+    </form>
+  </div>  
+
+	      <style type="text/css">
+  .cls_container{height:24px;overflow:hidden;}
+  .cls_container ul{list-style-type:none;margin:0;padding:0;margin-left:0px;}
+  .cls_container ul li{height:24px;line-height:24px;float:left;display:inline;}
+</style>
+
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">本站公告</h4>
+
+	<div id="myscroll" class="cls_container">
+		<ul>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		</ul>
+	</div>
+
+	<div id="showhint"></div>
+</div>
+
+<script type="text/javascript">
+	function $(element){
+	 if(arguments.length>1){
+	  for(var i=0,length=arguments.length,elements=[];i<length;i++){
+	   elements.push($(arguments[i]));
+	  }
+	  return elements;
+	 }
+	 if(typeof element=="string"){
+	  return document.getElementById(element);
+	 }else{
+	  return element;
+	 }
+	}
+	var Class={
+	 create:function(){
+	  return function(){
+	   this.initialize.apply(this,arguments);
+	  }
+	 }
+	}
+	Function.prototype.bind=function(object){
+	 var method=this;
+	 return function(){
+	  method.apply(object,arguments);
+	 }
+	}
+	var Scroll=Class.create();
+	Scroll.prototype={
+	 initialize:function(element,height){
+	  this.element=$(element);
+	  this.element.innerHTML+=this.element.innerHTML;
+	  this.height=height;
+	  this.maxHeight=this.element.scrollHeight/2;
+	  this.counter=0;
+	  this.scroll();
+	  this.timer="";
+	  this.element.onmouseover=this.stop.bind(this);
+	  this.element.onmouseout=function(){this.timer=setTimeout(this.scroll.bind(this),1000);}.bind(this);
+	 },
+	 scroll:function(){
+	  if(this.element.scrollTop<this.maxHeight){
+	   this.element.scrollTop++;
+	   this.counter++;
+	  }else{
+	   this.element.scrollTop=0;
+	   this.counter=0;
+	  }
+	  if(this.counter<this.height){
+	   this.timer=setTimeout(this.scroll.bind(this),20);
+	  }else{
+	   this.counter=0;
+	   this.timer=setTimeout(this.scroll.bind(this),3000);
+	  }
+	 },
+	 stop:function(){
+	  clearTimeout(this.timer);
+	 }
+	}
+	var myscroll=new Scroll("myscroll",24);
+</script>
+
+
+	      <!-- toc -->	      
+	      	      
+
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">分类目录</h4>
+		<ul class="tag_box inline list-unstyled">
+		
+			<li><a href="/categories/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/categories/python/">python<span>1</span></a></li>
+		
+			<li><a href="/categories/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/categories/坑/">坑<span>1</span></a></li>
+		
+			<li><a href="/categories/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/categories/并发学习/">并发学习<span>1</span></a></li>
+		
+			<li><a href="/categories/我的翻译/">我的翻译<span>1</span></a></li>
+		
+			<li><a href="/categories/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/categories/测试/">测试<span>1</span></a></li>
+		
+			<li><a href="/categories/项目经验/">项目经验<span>2</span></a></li>
+		
+		</ul>
+	</div>
+	
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333 ">标签云</h4>
+		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/项目总结/">项目总结<span>1</span></a></li>
+		
+			<li><a href="/tags/redis，缓存/">redis，缓存<span>1</span></a></li>
+		
+			<li><a href="/tags/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/tags/EJB-EntityManager-JPA-Datasource/">EJB EntityManager JPA Datasource<span>1</span></a></li>
+		
+			<li><a href="/tags/kafka/">kafka<span>1</span></a></li>
+		
+			<li><a href="/tags/服务器架构/">服务器架构<span>1</span></a></li>
+		
+			<li><a href="/tags/hadoop/">hadoop<span>1</span></a></li>
+		
+			<li><a href="/tags/which/">which<span>1</span></a></li>
+		
+			<li><a href="/tags/单点登录/">单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/zookeeper/">zookeeper<span>1</span></a></li>
+		
+			<li><a href="/tags/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/tags/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/tags/storm/">storm<span>1</span></a></li>
+		
+			<li><a href="/tags/并发/">并发<span>1</span></a></li>
+		
+			<li><a href="/tags/elasticsearch/">elasticsearch<span>1</span></a></li>
+		
+			<li><a href="/tags/性能监控/">性能监控<span>1</span></a></li>
+		
+			<li><a href="/tags/JVM，垃圾收集器，HotSpot/">JVM，垃圾收集器，HotSpot<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结，单点登录/">项目总结，单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/tags/性能测试/">性能测试<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>21</span></a></li>
+		 
+		</ul>
+	</div>
+
+
+	      
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">友情链接</h4>
+	<ul class="blogroll list-unstyled">
+	
+		<li style="font-size:14px"><i class="fa fa-share"></i><a href="http://hexo.io" title="Hexo site." target="_blank"]);">Hexo</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-github"></i><a href="https://github.com/AhahaGe" title="My Github account." target="_blank"]);">我的github</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-cloud-upload"></i><a href="http://www.qiniu.com" title="My Weibo account." target="_blank"]);">七牛云存储</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-chain"></i><a href="https://github.com/rudy-yuan/free2mind" title="free2mind theme." target="_blank"]);">Hexo-Theme-Free2mind</a></li>
+	
+	</ul>
+</div>
+
+
+	      <div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">近期评论</h4>
+	<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="0" data-show-admin="1" data-excerpt-length="100" ></ul>
+	
+	<script type="text/javascript">
+	    var duoshuoQuery = { short_name: 'blogoryza' };
+	    (function() {
+	    var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+
+</div>
+
+
+	
+	      <section id="recent-visitors" class="widget widget_recent_comments">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">最近访客</h4>
+  	<div class="panelbody clearfix"><ul class="ds-recent-visitors" data-num-items="30"></ul></div>
+</section>    
+	      </div> <!-- sidebar -->
+      </div> <!-- col-md-3 -->
+
+		</div>
+			
+
+</div><!-- row -->
+
+
+	<script type="text/javascript">
+	  var duoshuoQuery = { short_name: 'blogoryza' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  AhahaGe &copy; 2015-2016.
+  
+       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, <a href="https://swiftype.com/" target="_blank">Swiftype</a> and <a href="http://www.qiniu.com/" target="_blank">七牛云存储</a>.
+      <i class="fa fa-sitemap %>"></i> <a href="/sitemap.xml" target="_blank"> 站点地图</a>. <a href="http://www.miitbeian.gov.cn/">浙ICP备14039723号-1</a>.
+      
+      
+      <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259907039'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1259907039%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WSRpFx1x7aC6s9oHyBKz','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>

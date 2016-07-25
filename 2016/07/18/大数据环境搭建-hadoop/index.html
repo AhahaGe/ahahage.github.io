@@ -1,0 +1,584 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>大数据环境搭建-hadoop | 稻子网博客</title>
+  <meta name="author" content="AhahaGe">
+  
+  <meta name="description" content="稻子网博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="大数据环境搭建-hadoop"/>
+  <meta property="og:site_name" content="稻子网博客"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.ico" rel="icon">
+  
+
+  <!-- CSS -->
+
+
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">稻子网博客</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>文章归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/message" title="All the tags.">
+			  <i class="fa fa-pencil"></i>给我留言
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-info-circle"></i>关于本站
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+		<!-- content -->
+
+		<div class="slogan" style="margin-bottom: 17px">
+		  <h4 style="margin-top: 0;color: #333;font-size:15px;font-weight: normal;">
+			  当前位置&nbsp;:&nbsp;<a href="/" >首页&nbsp;</a>»&nbsp;文章分类&nbsp;:&nbsp;
+			
+				<a href="/categories/大数据/">大数据</a>
+			
+		  &nbsp;</a>»&nbsp; 大数据环境搭建-hadoop </h4>
+		</div>
+
+		<div id="top_search"></div>
+				 
+		
+
+		<div class="archive">	  
+			<div id="archives"> 
+				
+				<header class="entry-header">
+					<div class="entry-info" text-transform : capitalize>				     					      	      
+							
+						<span class="entry-date">
+							<span class="fa fa-calendar" aria-hidden="true"></span>
+							2016-07-18						      
+						</span>
+							  
+							  
+						<span class="author vcard">
+							<span class="fa fa-user" aria-hidden="true"></span>
+							<a href="/">AhahaGe</a> 	 	
+						</span>
+
+						<span class="comments-link">
+							<span class="fa fa-comments" aria-hidden="true"></span>
+							<span class="ds-thread-count" data-thread-key="2016/07/18/大数据环境搭建-hadoop/">暂无评论</span>
+						</span>						
+							
+					</div>	
+
+									
+					<h3 class="entry-title"> 
+						<a href="/2016/07/18/大数据环境搭建-hadoop/" >大数据环境搭建-hadoop</a>
+					</h3>		
+						
+					<span style="font-size:15px"><h1 id="what"><a href="#what" class="headerlink" title="what"></a>what</h1><p>   本文仅描述如何在多台机器上部署hadoop集群。<br><a id="more"></a></p>
+<h1 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h1><ol>
+<li>三台在同一个内网的测试机,系统是64位centos6.5+，最好可以访问外网。</li>
+<li>请参照<a href="http://blog.oryza.cn/2015/05/27/centos6-5%E5%9F%BA%E6%9C%AC%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">centos6.5基本开发环境搭建</a>安装并配置jdk环境。</li>
+</ol>
+<hr>
+<h1 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h1><p>&#160; &#160; &#160; &#160; 1. 在bigdata用户组下创建hadoop用户 </p>
+<blockquote>
+<p>group add bigdata<br>   useradd -g bigdata hadoop<br>   passwd hadoop</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160; 2. 配置SSH无密码登陆<br>&#160; &#160; &#160; &#160;SSH 无密 码原理简介 :</p>
+<blockquote>
+<p>首先在hadoop1上生成一个密钥对，包括一个公钥和一个私钥，并将公钥复制到所有的 slave(hadoop2-hadoop3)上。<br>然后当master通过SSH连接slave时，slave就会生成一个随机数并用master的公钥对随机数进行加密，并发送给master 。<br>最后master收到加密数之后再用私钥解密，并将解密数回传给slave，slave确认解密数无误之后就允许master不输入密码进行连接了。</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160;具体步骤（在root用户和hadoop用户登陆情况下执行）<br>1 、执行命令ssh-keygen -t rsa之后一路回车，查看刚生成的无密码钥对： cd .ssh 后执行ll<br>2 、把 id_rsa.pub 追加到授权的 key 里面去。 执行命令 cat ~/.ssh/id_rsa.pub &gt;&gt;~/.ssh/authorized_keys<br>3 、修改权限： 执行 chmod 600 ~/.ssh/authorized_keys<br>4 、确保 cat /etc/ssh/sshd_config 中存在如下内容</p>
+<blockquote>
+<p>RSAAuthentication yes<br>PubkeyAuthentication yes<br>AuthorizedKeysFile      .ssh/authorized_keys</p>
+</blockquote>
+<p>如需修改， 则在修改后执行重启 SSH 服 务命令使其生效 | service sshd restart<br>5 、将公 钥复制到所有的 slave 机器上 :scp ~/.ssh/id_rsa.pub 192.168.1.203 ： ~/    然后 输入 yes ，最后 输入 slave 机器的密 码<br>6 、在 slave 机器上 创建 .ssh 文件夹 :mkdir ~/.ssh 然后 执行 chmod 700 ~/.ssh （若文件夹以存在 则不需要创建）<br>7 、追加到授权文件 authorized_keys 执行命令 :cat ~/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys 然后 执行 chmod 600 ~/.ssh/authorized_keys<br>8 、重复第 4 步<br>9 、 验证命令 : 在 master 机器上 执行 ssh 192.168.1.203 发现主机名由 hadoop1 变成 hadoop3 即成功，最后 删除 id_rsa.pub 文件 :rm -r id_rsa.pub<br>按照以上步骤从步骤1到9分别配置其它的机器，要求每个都可以无密码登录</p>
+<p>&#160; &#160; &#160; &#160; 3. 下载安装包并解压<br>下载hadoop-2.7.1.tar.gz到/home/hadoop/opt/目录下，然后tar&amp;ln -s。</p>
+<p>&#160; &#160; &#160; &#160; 4. config /etc/profile</p>
+<blockquote>
+<p>配置 环境变量： vim /etc/profile<br>在末尾添加<br>export HADOOP_DEV_HOME=/home/hadoop/hadoop<br>export PATH=$PATH:$HADOOP_DEV_HOME/bin<br>export PATH=$PATH:$HADOOP_DEV_HOME/sbin<br>export HADOOP_MAPARED_HOME=${HADOOP_DEV_HOME}<br>export HADOOP_COMMON_HOME=${HADOOP_DEV_HOME}<br>export HADOOP_HDFS_HOME=${HADOOP_DEV_HOME}<br>export YARN_HOME=${HADOOP_DEV_HOME}<br>export HADOOP_CONF_DIR=${HADOOP_DEV_HOME}/etc/hadoop<br>export HDFS_CONF_DIR=${HADOOP_DEV_HOME}/etc/hadoop<br>export YARN_CONF_DIR=${HADOOP_DEV_HOME}/etc/hadoop</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160; 5. config /etc/hadoop/</p>
+<p><strong>yarn-site.xml</strong></p>
+<p><img src="http://7x2w20.com1.z0.glb.clouddn.com/yarn-site.png" alt="yarn-site.xml"></p>
+<p><strong>hdfs-site.xml</strong></p>
+<p><img src="http://7x2w20.com1.z0.glb.clouddn.com/hdfs-site.png" alt="hdfs-site.xml"></p>
+<p><strong>core-site.xml</strong></p>
+<p><img src="http://7x2w20.com1.z0.glb.clouddn.com/core-site.png" alt="core-site.xml"></p>
+<p><strong>mapred-site.xml</strong><br><img src="http://7x2w20.com1.z0.glb.clouddn.com/mapred-site.png" alt="mapred-site.xml"></p>
+<p>slaves：列出所有的slave节点，一行一个。</p>
+<p>&#160; &#160; &#160; &#160; 6. start hadoop</p>
+<blockquote>
+<ol>
+<li>hadoop namenode format</li>
+<li>start-dfs.sh   &amp; start-yarn.sh</li>
+<li>jps</li>
+</ol>
+</blockquote>
+<p>&#160; &#160; &#160; &#160; 7. start hadoop</p>
+<blockquote>
+<ol>
+<li>hadoop namenode format</li>
+<li>start-dfs.sh   &amp; start-yarn.sh</li>
+<li>jps</li>
+</ol>
+</blockquote>
+<p>&#160; &#160; &#160; &#160; 8. stop hadoop</p>
+<blockquote>
+<ol>
+<li>stop-dfs.sh   &amp; stop-yarn.sh</li>
+<li>jps</li>
+</ol>
+</blockquote>
+<p>&#160; &#160; &#160; &#160; 9. check installation</p>
+<p><strong>hadoop master</strong><br><img src="http://7x2w20.com1.z0.glb.clouddn.com/hadoop_master.png" alt="hadoop master"></p>
+<blockquote>
+<p>hadoop fs -ls hdfs://master:8020/<br>hadoop fs -mkdir hdfs://master:8020/testfolder<br>hadoop fs -copyFromLocal ./xxxx hdfs://master:8020/testfolder<br>hadoop fs -ls hdfs://master:8020/ testfolder</p>
+</blockquote>
+<h1 id="碰到的一些问题"><a href="#碰到的一些问题" class="headerlink" title="碰到的一些问题"></a>碰到的一些问题</h1><ol>
+<li><p>ls: Failed on local exception: com.google.protobuf.InvalidProtocolBufferException:<br>Protocol    message end-group tag did not match expected tag.;<br>端口号错了</p>
+</li>
+<li><p>namenode启动不了<br> hdfs-site.xml<br> core-site.xml</p>
+</li>
+<li><p>secondary namenode ip地址设置，如果不设置就是0.0.0.0<br>hdfs-site.xml</p>
+<blockquote>
+<p><name>dfs.namenode.secondary.http-address</name></p>
+<value>master:23002</value>
+</blockquote>
+</li>
+<li><p>hadoop connection refused on port 9000<br>vi /etc/ssh/sshd_config<br>Port 9000</p>
+</li>
+<li><p>ssh hostname<br><a href="http://serverfault.com/questions/215007/associate-name-with-ip-for-ssh" target="_blank" rel="external">http://serverfault.com/questions/215007/associate-name-with-ip-for-ssh</a><br>可以创建~/.ssh/config 文件并为每台服务器指定登录信息和验证方法<br>cat ~/.ssh/config<br>Host master<br>HostName ip<br>User hadoop<br>chmod 600 ~/.ssh/config</p>
+</li>
+<li><p>Change the default SSH port</p>
+<blockquote>
+<p>Step 1<br>As root, use your favorite text editor (vi) to edit the sshd configuration file.<br>vi /etc/ssh/sshd_config<br>Step 2<br>Edit the line which states ‘Port 22’. But before doing so, you’ll want to read the note below. Choose an appropriate port, also making sure it not currently used on the system. What ports, IPs and protocols we listen for<br>Port 50683<br>Step 3<br>Switch over to the new port by restarting SSH.<br>/etc/init.d/ssh restart<br>Step 4<br>Verify SSH is listening on the new port by connecting to it. Note how the port number now needs to be declared.<br>ssh username@hostname.com -p 50683</p>
+</blockquote>
+</li>
+</ol>
+</span>
+				</header>
+
+				<!-- share -->
+				
+					
+
+					
+     <footer class="entry-meta">      
+
+	    <div class="fenlei" style="font-size:13.5px">
+			<span class="entry-categories">
+				<span class="fa fa-folder" aria-hidden="true"></span> 
+
+				
+					<a href="/categories/大数据/">大数据</a>
+				
+
+			</span>
+			
+			<span class="entry-tags">        
+				<span class="fa fa-tags" aria-hidden="true"></span> 
+
+				
+					<a href="/tags/大数据/">大数据</a>&nbsp;
+				
+					<a href="/tags/hadoop/">hadoop</a>&nbsp;
+				
+
+			</span>
+		</div>
+
+     
+		<!-- JiaThis Button BEGIN -->
+		<div class="jiathis_style" style="float:right;">
+			<span class="jiathis_txt">分享到：</span>
+			<a class="jiathis_button_qzone">QQ空间</a>
+			<a class="jiathis_button_tsina">新浪微博</a>
+			<a class="jiathis_button_weixin">微信</a>
+			<a class="jiathis_button_copy">复制</a>
+			<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+			<a class="jiathis_counter_style"></a>
+		</div>
+		<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+		<!-- JiaThis Button END -->
+		<br>
+    </footer>
+
+
+				
+			</div>	
+		</div>	 	        
+
+		 
+				
+					<p class="p1">上一篇 <a href="/2016/07/18/大数据环境搭建-elasticsearch/">大数据环境搭建-elasticsearch</a></p> 
+
+				
+				   <p class="p2">下一篇 <a href="/2016/07/18/大数据环境搭建-storm/">大数据环境搭建-storm</a></p> 
+			
+		
+		<!-- comment -->
+		
+<section id="comment">
+  
+  	 <div class="ds-thread" data-thread-key="2016/07/18/大数据环境搭建-hadoop/" data-title="大数据环境搭建-hadoop" data-url="http://blog.oryza.cn/2016/07/18/大数据环境搭建-hadoop/"></div>  
+  
+</section>
+
+		
+	</div> <!-- col-md-9/col-md-12 -->	
+
+	
+		<div id="side_meta">
+			
+      <div class="col-md-3">
+	      <div id="sidebar">
+	      
+  <div class="form-group has-success has-feedback" id="site_search">
+    <form class="site-search-form">
+        <input type="text" id="st-search-input" name="q" results="0" placeholder="搜索" class="st-search-input st-default-search-input form-control" />
+    </form>
+  </div>  
+
+	      <style type="text/css">
+  .cls_container{height:24px;overflow:hidden;}
+  .cls_container ul{list-style-type:none;margin:0;padding:0;margin-left:0px;}
+  .cls_container ul li{height:24px;line-height:24px;float:left;display:inline;}
+</style>
+
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">本站公告</h4>
+
+	<div id="myscroll" class="cls_container">
+		<ul>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		</ul>
+	</div>
+
+	<div id="showhint"></div>
+</div>
+
+<script type="text/javascript">
+	function $(element){
+	 if(arguments.length>1){
+	  for(var i=0,length=arguments.length,elements=[];i<length;i++){
+	   elements.push($(arguments[i]));
+	  }
+	  return elements;
+	 }
+	 if(typeof element=="string"){
+	  return document.getElementById(element);
+	 }else{
+	  return element;
+	 }
+	}
+	var Class={
+	 create:function(){
+	  return function(){
+	   this.initialize.apply(this,arguments);
+	  }
+	 }
+	}
+	Function.prototype.bind=function(object){
+	 var method=this;
+	 return function(){
+	  method.apply(object,arguments);
+	 }
+	}
+	var Scroll=Class.create();
+	Scroll.prototype={
+	 initialize:function(element,height){
+	  this.element=$(element);
+	  this.element.innerHTML+=this.element.innerHTML;
+	  this.height=height;
+	  this.maxHeight=this.element.scrollHeight/2;
+	  this.counter=0;
+	  this.scroll();
+	  this.timer="";
+	  this.element.onmouseover=this.stop.bind(this);
+	  this.element.onmouseout=function(){this.timer=setTimeout(this.scroll.bind(this),1000);}.bind(this);
+	 },
+	 scroll:function(){
+	  if(this.element.scrollTop<this.maxHeight){
+	   this.element.scrollTop++;
+	   this.counter++;
+	  }else{
+	   this.element.scrollTop=0;
+	   this.counter=0;
+	  }
+	  if(this.counter<this.height){
+	   this.timer=setTimeout(this.scroll.bind(this),20);
+	  }else{
+	   this.counter=0;
+	   this.timer=setTimeout(this.scroll.bind(this),3000);
+	  }
+	 },
+	 stop:function(){
+	  clearTimeout(this.timer);
+	 }
+	}
+	var myscroll=new Scroll("myscroll",24);
+</script>
+
+
+	      <!-- toc -->	      
+	      	      
+
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">分类目录</h4>
+		<ul class="tag_box inline list-unstyled">
+		
+			<li><a href="/categories/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/categories/python/">python<span>1</span></a></li>
+		
+			<li><a href="/categories/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/categories/坑/">坑<span>1</span></a></li>
+		
+			<li><a href="/categories/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/categories/并发学习/">并发学习<span>1</span></a></li>
+		
+			<li><a href="/categories/我的翻译/">我的翻译<span>1</span></a></li>
+		
+			<li><a href="/categories/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/categories/测试/">测试<span>1</span></a></li>
+		
+			<li><a href="/categories/项目经验/">项目经验<span>2</span></a></li>
+		
+		</ul>
+	</div>
+	
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333 ">标签云</h4>
+		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/EJB-EntityManager-JPA-Datasource/">EJB EntityManager JPA Datasource<span>1</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/tags/elasticsearch/">elasticsearch<span>1</span></a></li>
+		
+			<li><a href="/tags/storm/">storm<span>1</span></a></li>
+		
+			<li><a href="/tags/ab/">ab<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结，单点登录/">项目总结，单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/zookeeper/">zookeeper<span>1</span></a></li>
+		
+			<li><a href="/tags/hadoop/">hadoop<span>1</span></a></li>
+		
+			<li><a href="/tags/并发/">并发<span>1</span></a></li>
+		
+			<li><a href="/tags/kafka/">kafka<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结/">项目总结<span>1</span></a></li>
+		
+			<li><a href="/tags/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/tags/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/tags/性能测试/">性能测试<span>1</span></a></li>
+		
+			<li><a href="/tags/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/tags/JVM，垃圾收集器，HotSpot/">JVM，垃圾收集器，HotSpot<span>1</span></a></li>
+		
+			<li><a href="/tags/单点登录/">单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/redis，缓存/">redis，缓存<span>1</span></a></li>
+		
+			<li><a href="/tags/which/">which<span>1</span></a></li>
+		
+			<li><a href="/tags/服务器架构/">服务器架构<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>21</span></a></li>
+		 
+		</ul>
+	</div>
+
+
+	      
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">友情链接</h4>
+	<ul class="blogroll list-unstyled">
+	
+		<li style="font-size:14px"><i class="fa fa-share"></i><a href="http://hexo.io" title="Hexo site." target="_blank"]);">Hexo</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-github"></i><a href="https://github.com/AhahaGe" title="My Github account." target="_blank"]);">我的github</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-cloud-upload"></i><a href="http://www.qiniu.com" title="My Weibo account." target="_blank"]);">七牛云存储</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-chain"></i><a href="https://github.com/rudy-yuan/free2mind" title="free2mind theme." target="_blank"]);">Hexo-Theme-Free2mind</a></li>
+	
+	</ul>
+</div>
+
+
+	      <div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">近期评论</h4>
+	<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="0" data-show-admin="1" data-excerpt-length="100" ></ul>
+	
+	<script type="text/javascript">
+	    var duoshuoQuery = { short_name: 'blogoryza' };
+	    (function() {
+	    var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+
+</div>
+
+
+	
+	      <section id="recent-visitors" class="widget widget_recent_comments">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">最近访客</h4>
+  	<div class="panelbody clearfix"><ul class="ds-recent-visitors" data-num-items="30"></ul></div>
+</section>    
+	      </div> <!-- sidebar -->
+      </div> <!-- col-md-3 -->
+
+		</div>
+			
+
+</div><!-- row -->
+
+
+	<script type="text/javascript">
+	  var duoshuoQuery = { short_name: 'blogoryza' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  AhahaGe &copy; 2015-2016.
+  
+       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, <a href="https://swiftype.com/" target="_blank">Swiftype</a> and <a href="http://www.qiniu.com/" target="_blank">七牛云存储</a>.
+      <i class="fa fa-sitemap %>"></i> <a href="/sitemap.xml" target="_blank"> 站点地图</a>. <a href="http://www.miitbeian.gov.cn/">浙ICP备14039723号-1</a>.
+      
+      
+      <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259907039'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1259907039%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WSRpFx1x7aC6s9oHyBKz','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>

@@ -1,0 +1,579 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>大数据环境搭建-elasticsearch | 稻子网博客</title>
+  <meta name="author" content="AhahaGe">
+  
+  <meta name="description" content="稻子网博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="大数据环境搭建-elasticsearch"/>
+  <meta property="og:site_name" content="稻子网博客"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.ico" rel="icon">
+  
+
+  <!-- CSS -->
+
+
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">稻子网博客</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>文章归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/message" title="All the tags.">
+			  <i class="fa fa-pencil"></i>给我留言
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-info-circle"></i>关于本站
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+		<!-- content -->
+
+		<div class="slogan" style="margin-bottom: 17px">
+		  <h4 style="margin-top: 0;color: #333;font-size:15px;font-weight: normal;">
+			  当前位置&nbsp;:&nbsp;<a href="/" >首页&nbsp;</a>»&nbsp;文章分类&nbsp;:&nbsp;
+			
+				<a href="/categories/大数据/">大数据</a>
+			
+		  &nbsp;</a>»&nbsp; 大数据环境搭建-elasticsearch </h4>
+		</div>
+
+		<div id="top_search"></div>
+				 
+		
+
+		<div class="archive">	  
+			<div id="archives"> 
+				
+				<header class="entry-header">
+					<div class="entry-info" text-transform : capitalize>				     					      	      
+							
+						<span class="entry-date">
+							<span class="fa fa-calendar" aria-hidden="true"></span>
+							2016-07-18						      
+						</span>
+							  
+							  
+						<span class="author vcard">
+							<span class="fa fa-user" aria-hidden="true"></span>
+							<a href="/">AhahaGe</a> 	 	
+						</span>
+
+						<span class="comments-link">
+							<span class="fa fa-comments" aria-hidden="true"></span>
+							<span class="ds-thread-count" data-thread-key="2016/07/18/大数据环境搭建-elasticsearch/">暂无评论</span>
+						</span>						
+							
+					</div>	
+
+									
+					<h3 class="entry-title"> 
+						<a href="/2016/07/18/大数据环境搭建-elasticsearch/" >大数据环境搭建-elasticsearch</a>
+					</h3>		
+						
+					<span style="font-size:15px"><h1 id="what"><a href="#what" class="headerlink" title="what"></a>what</h1><p>&#160; &#160; &#160; &#160;本文仅描述如何在多台机器上部署elasticsearch集群，并简单介绍了es的基本概念和es的基本操作。最后将会介绍elastic dump工具的安装和使用。<br>    <a id="more"></a></p>
+<h1 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h1><ol>
+<li>三台在同一个内网的测试机,系统是64位centos6.5+，最好可以访问外网。</li>
+<li>请参照<a href="http://blog.oryza.cn/2015/05/27/centos6-5%E5%9F%BA%E6%9C%AC%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">centos6.5基本开发环境搭建</a>安装并配置jdk环境。</li>
+</ol>
+<hr>
+<h1 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h1><ol>
+<li>在bigdata用户组下创建kafka用户 <blockquote>
+<p>group add bigdata<br>useradd -g bigdata elastic<br>passwd elastic</p>
+</blockquote>
+</li>
+<li>然后去elasticsearch官网下载对应版本的安装包放到/home/elasticsearch/opt/目录下，解压<blockquote>
+<p>tar -zxvf elasticsearch-2.1.1.tar.gz </p>
+</blockquote>
+</li>
+<li>在elasticsearch-2.1.1/config目录下，配置elasticsearch.yml<blockquote>
+<p>cluster.name: ESTest<br>  node.name: es-node-1 | 节点名称<br>  path.data: /mnt/data/elastic/data | es数据存放目录<br>  path.logs: /mnt/data/elastic/log | es日志存放目录<br>  network.host: A | 本机ip或域名<br>  http.port: 9200 | 客户端连接端口<br>  discovery.zen.ping.unicast.hosts: [“A”, “B”] | zookeeper节点列表</p>
+</blockquote>
+</li>
+<li>backend start | your server ./elasticsearch -d</li>
+<li>在不同的机器上重复1-4步骤，注意node.name是不同的。</li>
+<li>Verify install<ol>
+<li>jps</li>
+<li>ps aux | grep elasticsearch</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h1 id="ES基本概念"><a href="#ES基本概念" class="headerlink" title="ES基本概念"></a>ES基本概念</h1><p>&#160; &#160; &#160; &#160;ElastichSearch是一个分布式的，可扩展的，高可用的全文搜索服务器，它可以实时的查询和分析数据，并提供了一套功能强大的rest api。</p>
+<p>&#160; &#160; &#160; &#160;1. 索引是elasticsearch存放数据的地方，可以理解为关系数据库的表。<br>&#160; &#160; &#160; &#160;2. 文档是ElasticSearch中存储的主要实体，可以理解为数据表中的一行数据。文档由字段（行数据的列）组成，多值字段允许一个字段出现多次，一个字段对应一种类型。字段类型可以是复合的，字段可以包含其它子文档或数组。字段类型决定了搜索引擎执行何种操作，如比较、排序等，ElasticSearch可以自动确定字段类型。文档不需要有固定的结构，不同文档可以有不同的字段集合，而且在程序开发时不需要知道文档的字段。<br>&#160; &#160; &#160; &#160;3. 文档类型：一个索引可以存储许多不同用途的对象，文档类型可以轻松区分这些对象。<br>&#160; &#160; &#160; &#160;4. 节点和集群：为了能够处理大型数据集并实现容错功能，ElasticSearch支持在多台协同工作的服务器上运行。这些服务器被统称为一个集群，集群的每个服务器被称为一个节点。通过索引分片(分割成更小的个体)将海量数据进行分割并分布到不同的节点。通过副本(索引部分的拷贝)可以实现更强的可用性和更高的性能。<br>&#160; &#160; &#160; &#160;5. 分片：当需要存储大规模文档时，由于RAM空间、硬盘容量等的限制，仅使用一个节点是不够的。另一个问题是一个节点的计算能力达不到期望的复杂功能的需求。在这些情况下，可以将数据切分，每个部分一个单独的Apache Lucene索引，称为分片(Shard)。每个分片可以被存储在集群的不同节点上。当需要查询一个由多个分片构成的索引时，ElasticSearch将该查询发送到每个相关的分片，并将结果合并。这些过程对应具体应用是透明的，无需知道分片的存在。<br>&#160; &#160; &#160; &#160;6. 副本：为了提高查询的吞吐量或实现高可用性，可以启用分片副本功能。副本分片是对原始分片的一个精确拷贝，原始分片被称为主分片。对索引的所有修改操作都直接作用在主分片上，每个主分片可以有零个或多个副本分片。当主分片丢失时，集群可以将一个副本分片提升为新的主分片。  </p>
+<hr>
+<h1 id="ES基本操作"><a href="#ES基本操作" class="headerlink" title="ES基本操作"></a>ES基本操作</h1><ol>
+<li>查看集群健康状况<blockquote>
+<p>curl -XGET <a href="http://localhost:9200/_cluster/health?pretty=true" target="_blank" rel="external">http://localhost:9200/_cluster/health?pretty=true</a></p>
+</blockquote>
+</li>
+<li><p>创建test索引</p>
+<figure class="highlight plain"><figcaption><span>curl -XPOST 10.0.2.44:9200/test -d '&#123;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">    &quot;mappings&quot;: &#123;</div><div class="line">        &quot;record&quot;: &#123;</div><div class="line">            &quot;properties&quot;: &#123;</div><div class="line">                &quot;id&quot;: &#123;</div><div class="line">                    &quot;type&quot;: &quot;string&quot;</div><div class="line">                &#125;,</div><div class="line">                &quot;day&quot;: &#123;</div><div class="line">                    &quot;type&quot;: &quot;string&quot;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;&apos;;</div></pre></td></tr></table></figure>
+<p> 也可以是curl curl -XPOST ‘<a href="http://localhost:9200/test" target="_blank" rel="external">http://localhost:9200/test</a>‘ -d @test.json，test.json文件的内容是JSON对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    &quot;mappings&quot;: &#123;</div><div class="line">            &quot;object1&quot;:&#123;</div><div class="line">                &quot;properties&quot;:&#123;</div><div class="line">                    &quot;id&quot;:&#123;&quot;type&quot;:&quot;long&quot;&#125;,</div><div class="line">                    &quot;day&quot;:&#123;&quot;type&quot;:&quot;string&quot;&#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除索引</p>
+<blockquote>
+<p>curl -XDELETE <a href="http://localhost:9200/test" target="_blank" rel="external">http://localhost:9200/test</a></p>
+</blockquote>
+</li>
+<li>创建文档<blockquote>
+<p>curl -XPUT <a href="http://localhost:9200/test/record/1" target="_blank" rel="external">http://localhost:9200/test/record/1</a> -d “” -d选项的取值用作请求负载的文本，请求正文</p>
+</blockquote>
+</li>
+<li>检索文档<blockquote>
+<p>curl -XGET <a href="http://localhost:9200/test/record/1" target="_blank" rel="external">http://localhost:9200/test/record/1</a></p>
+</blockquote>
+</li>
+<li>更新文档<blockquote>
+<p>curl -XPOST <a href="http://localhost:9200/test/record/1" target="_blank" rel="external">http://localhost:9200/test/record/1</a> update -d选项的取值用作请求负载的文本，请求正文</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="elasticdump"><a href="#elasticdump" class="headerlink" title="elasticdump"></a>elasticdump</h1><p>Tools for moving and saving indicies.</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a><strong>安装</strong></h3><p>&#160; &#160; &#160; &#160;首先安装nodejs</p>
+<blockquote>
+<p>rpm -ivh <a href="http://epel.mirror.net.in/epel/6/i386/epel-release-6-8.noarch.rpm" target="_blank" rel="external">http://epel.mirror.net.in/epel/6/i386/epel-release-6-8.noarch.rpm</a><br>yum install npm –enablerepo=epel<br>node</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160;然后安装elasticdump</p>
+<blockquote>
+<p>npm install elasticdump -g elasticdump</p>
+</blockquote>
+<h3 id="使用教程"><a href="#使用教程" class="headerlink" title="使用教程"></a><strong>使用教程</strong></h3><p>elasticdump works by sending an input to an output. Both can be either an elasticsearch URL or a File.</p>
+<h4 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch:"></a>Elasticsearch:</h4><p>&#160; &#160; &#160; &#160;format: {protocol}://{host}:{port}/{index}<br>&#160; &#160; &#160; &#160;example: <a href="http://127.0.0.1:9200/my_index" target="_blank" rel="external">http://127.0.0.1:9200/my_index</a><br>&#160; &#160; &#160; &#160;File:</p>
+<p>&#160; &#160; &#160; &#160;format: {FilePath}<br>&#160; &#160; &#160; &#160;example: /Users/evantahler/Desktop/dump.json<br>&#160; &#160; &#160; &#160;Stdio:</p>
+<p>&#160; &#160; &#160; &#160;format: stdin / stdout<br>&#160; &#160; &#160; &#160;format: $<br>&#160; &#160; &#160; &#160;You can then do things like:</p>
+<h4 id="Copy-an-index-from-production-to-staging-with-analyzer-and-mapping-and-data"><a href="#Copy-an-index-from-production-to-staging-with-analyzer-and-mapping-and-data" class="headerlink" title="Copy an index from production to staging with analyzer and mapping and data:"></a>Copy an index from production to staging with analyzer and mapping and data:</h4><p>&#160; &#160; &#160; &#160;elasticdump \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–input=<a href="http://production.es.com:9200/my_index" target="_blank" rel="external">http://production.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–output=<a href="http://staging.es.com:9200/my_index" target="_blank" rel="external">http://staging.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–type=analyzer<br>&#160; &#160; &#160; &#160;elasticdump \<br>&#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;  –input=<a href="http://production.es.com:9200/my_index" target="_blank" rel="external">http://production.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–output=<a href="http://staging.es.com:9200/my_index" target="_blank" rel="external">http://staging.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–type=mapping<br>&#160; &#160; &#160; &#160;&#160;elasticdump \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–input=<a href="http://production.es.com:9200/my_index" target="_blank" rel="external">http://production.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–output=<a href="http://staging.es.com:9200/my_index" target="_blank" rel="external">http://staging.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–type=data</p>
+<h4 id="Backup-index-data-to-a-file"><a href="#Backup-index-data-to-a-file" class="headerlink" title="Backup index data to a file:"></a>Backup index data to a file:</h4><p>&#160; &#160; &#160; &#160;&#160;elasticdump \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–input=<a href="http://production.es.com:9200/my_index" target="_blank" rel="external">http://production.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–output=/data/my_index_mapping.json \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–type=mapping<br>&#160; &#160; &#160; &#160;&#160;elasticdump \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–input=<a href="http://production.es.com:9200/my_index" target="_blank" rel="external">http://production.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–output=/data/my_index.json \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–type=data</p>
+<h4 id="Backup-and-index-to-a-gzip-using-stdout"><a href="#Backup-and-index-to-a-gzip-using-stdout" class="headerlink" title="Backup and index to a gzip using stdout:"></a>Backup and index to a gzip using stdout:</h4><p>&#160; &#160; &#160; &#160;&#160;elasticdump \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–input=<a href="http://production.es.com:9200/my_index" target="_blank" rel="external">http://production.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–output=$ \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;| gzip &gt; /data/my_index.json.gz</p>
+<h4 id="Backup-the-results-of-a-query-to-a-file"><a href="#Backup-the-results-of-a-query-to-a-file" class="headerlink" title="Backup the results of a query to a file"></a>Backup the results of a query to a file</h4><p>&#160; &#160; &#160; &#160;&#160;elasticdump \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–input=<a href="http://production.es.com:9200/my_index" target="_blank" rel="external">http://production.es.com:9200/my_index</a> \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–output=query.json \<br>  &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160;–searchBody ‘{“query”:{“term”:{“username”: “admin”}}}’</p>
+<h4 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h4><figure class="highlight plain"><figcaption><span>Import and export tools for elasticsearch</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line">version: %%version%%</div><div class="line"></div><div class="line">Usage: elasticdump --input SOURCE --output DESTINATION [OPTIONS]</div><div class="line"></div><div class="line">--input</div><div class="line">                    Source location (required)</div><div class="line">--input-index</div><div class="line">                    Source index and type</div><div class="line">                    (default: all, example: index/type)</div><div class="line">--output</div><div class="line">                    Destination location (required)</div><div class="line">--output-index</div><div class="line">                    Destination index and type</div><div class="line">                    (default: all, example: index/type)</div><div class="line">--limit</div><div class="line">                    How many objects to move in batch per operation</div><div class="line">                    limit is approximate for file streams</div><div class="line">                    (default: 100)</div><div class="line">--debug</div><div class="line">                    Display the elasticsearch commands being used</div><div class="line">                    (default: false)</div><div class="line">--type</div><div class="line">                    What are we exporting?</div><div class="line">                    (default: data, options: [analyzer, data, mapping])</div><div class="line">--delete</div><div class="line">                    Delete documents one-by-one from the input as they are</div><div class="line">                    moved.  Will not delete the source index</div><div class="line">                    (default: false)</div><div class="line">--searchBody</div><div class="line">                    Preform a partial extract based on search results</div><div class="line">                    (when ES is the input,</div><div class="line">                    (default: &apos;&#123;&quot;query&quot;: &#123; &quot;match_all&quot;: &#123;&#125; &#125; &#125;&apos;))</div><div class="line">--sourceOnly</div><div class="line">                    Output only the json contained within the document _source</div><div class="line">                    Normal: &#123;&quot;_index&quot;:&quot;&quot;,&quot;_type&quot;:&quot;&quot;,&quot;_id&quot;:&quot;&quot;, &quot;_source&quot;:&#123;SOURCE&#125;&#125;</div><div class="line">                    sourceOnly: &#123;SOURCE&#125;</div><div class="line">                    (default: false)</div><div class="line">--ignore-errors</div><div class="line">                    Will continue the read/write loop on write error</div><div class="line">                    (default: false)</div><div class="line">--scrollTime</div><div class="line">                    Time the nodes will hold the requested search in order.</div><div class="line">                    (default: 10m)</div><div class="line">--maxSockets</div><div class="line">                    How many simultaneous HTTP requests can we process make?</div><div class="line">                    (default:</div><div class="line">                      5 [node &lt;= v0.10.x] /</div><div class="line">                      Infinity [node &gt;= v0.11.x] )</div><div class="line">--timeout</div><div class="line">                    Integer containing the number of milliseconds to wait for</div><div class="line">                    a request to respond before aborting the request. Passed</div><div class="line">                    directly to the request library. Mostly used when you don&apos;t</div><div class="line">                    care too much if you lose some data when importing</div><div class="line">                    but rather have speed.</div><div class="line">--offset</div><div class="line">                    Integer containing the number of rows you wish to skip</div><div class="line">                    ahead from the input transport.  When importing a large</div><div class="line">                    index, things can go wrong, be it connectivity, crashes,</div><div class="line">                    someone forgetting to `screen`, etc.  This allows you</div><div class="line">                    to start the dump again from the last known line written</div><div class="line">                    (as logged by the `offset` in the output).  Please be</div><div class="line">                    advised that since no sorting is specified when the</div><div class="line">                    dump is initially created, there&apos;s no real way to</div><div class="line">                    guarantee that the skipped rows have already been</div><div class="line">                    written/parsed.  This is more of an option for when</div><div class="line">                    you want to get most data as possible in the index</div><div class="line">                    without concern for losing some rows in the process,</div><div class="line">                    similar to the `timeout` option.</div><div class="line">                    (default: 0)</div><div class="line">--inputTransport</div><div class="line">                    Provide a custom js file to us as the input transport</div><div class="line">--outputTransport</div><div class="line">                    Provide a custom js file to us as the output transport</div><div class="line">--toLog</div><div class="line">                    When using a custom outputTransport, should log lines</div><div class="line">                    be appended to the output stream?</div><div class="line">                    (default: true, except for `$`)</div><div class="line">--awsAccessKeyId</div><div class="line">--awsSecretAccessKey</div><div class="line">                    When using Amazon Elasticsearch Service proteced by</div><div class="line">                    AWS Identity and Access Management (IAM), provide</div><div class="line">                    your Access Key ID and Secret Access Key</div><div class="line">--help</div><div class="line">                    This page</div></pre></td></tr></table></figure>
+</span>
+				</header>
+
+				<!-- share -->
+				
+					
+
+					
+     <footer class="entry-meta">      
+
+	    <div class="fenlei" style="font-size:13.5px">
+			<span class="entry-categories">
+				<span class="fa fa-folder" aria-hidden="true"></span> 
+
+				
+					<a href="/categories/大数据/">大数据</a>
+				
+
+			</span>
+			
+			<span class="entry-tags">        
+				<span class="fa fa-tags" aria-hidden="true"></span> 
+
+				
+					<a href="/tags/大数据/">大数据</a>&nbsp;
+				
+					<a href="/tags/elasticsearch/">elasticsearch</a>&nbsp;
+				
+
+			</span>
+		</div>
+
+     
+		<!-- JiaThis Button BEGIN -->
+		<div class="jiathis_style" style="float:right;">
+			<span class="jiathis_txt">分享到：</span>
+			<a class="jiathis_button_qzone">QQ空间</a>
+			<a class="jiathis_button_tsina">新浪微博</a>
+			<a class="jiathis_button_weixin">微信</a>
+			<a class="jiathis_button_copy">复制</a>
+			<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+			<a class="jiathis_counter_style"></a>
+		</div>
+		<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+		<!-- JiaThis Button END -->
+		<br>
+    </footer>
+
+
+				
+			</div>	
+		</div>	 	        
+
+		 
+				
+					<p class="p1">上一篇 <a href="/2016/07/20/接口性能测试工具-ab/">接口性能测试工具-ab</a></p> 
+
+				
+				   <p class="p2">下一篇 <a href="/2016/07/18/大数据环境搭建-hadoop/">大数据环境搭建-hadoop</a></p> 
+			
+		
+		<!-- comment -->
+		
+<section id="comment">
+  
+  	 <div class="ds-thread" data-thread-key="2016/07/18/大数据环境搭建-elasticsearch/" data-title="大数据环境搭建-elasticsearch" data-url="http://blog.oryza.cn/2016/07/18/大数据环境搭建-elasticsearch/"></div>  
+  
+</section>
+
+		
+	</div> <!-- col-md-9/col-md-12 -->	
+
+	
+		<div id="side_meta">
+			
+      <div class="col-md-3">
+	      <div id="sidebar">
+	      
+  <div class="form-group has-success has-feedback" id="site_search">
+    <form class="site-search-form">
+        <input type="text" id="st-search-input" name="q" results="0" placeholder="搜索" class="st-search-input st-default-search-input form-control" />
+    </form>
+  </div>  
+
+	      <style type="text/css">
+  .cls_container{height:24px;overflow:hidden;}
+  .cls_container ul{list-style-type:none;margin:0;padding:0;margin-left:0px;}
+  .cls_container ul li{height:24px;line-height:24px;float:left;display:inline;}
+</style>
+
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">本站公告</h4>
+
+	<div id="myscroll" class="cls_container">
+		<ul>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		</ul>
+	</div>
+
+	<div id="showhint"></div>
+</div>
+
+<script type="text/javascript">
+	function $(element){
+	 if(arguments.length>1){
+	  for(var i=0,length=arguments.length,elements=[];i<length;i++){
+	   elements.push($(arguments[i]));
+	  }
+	  return elements;
+	 }
+	 if(typeof element=="string"){
+	  return document.getElementById(element);
+	 }else{
+	  return element;
+	 }
+	}
+	var Class={
+	 create:function(){
+	  return function(){
+	   this.initialize.apply(this,arguments);
+	  }
+	 }
+	}
+	Function.prototype.bind=function(object){
+	 var method=this;
+	 return function(){
+	  method.apply(object,arguments);
+	 }
+	}
+	var Scroll=Class.create();
+	Scroll.prototype={
+	 initialize:function(element,height){
+	  this.element=$(element);
+	  this.element.innerHTML+=this.element.innerHTML;
+	  this.height=height;
+	  this.maxHeight=this.element.scrollHeight/2;
+	  this.counter=0;
+	  this.scroll();
+	  this.timer="";
+	  this.element.onmouseover=this.stop.bind(this);
+	  this.element.onmouseout=function(){this.timer=setTimeout(this.scroll.bind(this),1000);}.bind(this);
+	 },
+	 scroll:function(){
+	  if(this.element.scrollTop<this.maxHeight){
+	   this.element.scrollTop++;
+	   this.counter++;
+	  }else{
+	   this.element.scrollTop=0;
+	   this.counter=0;
+	  }
+	  if(this.counter<this.height){
+	   this.timer=setTimeout(this.scroll.bind(this),20);
+	  }else{
+	   this.counter=0;
+	   this.timer=setTimeout(this.scroll.bind(this),3000);
+	  }
+	 },
+	 stop:function(){
+	  clearTimeout(this.timer);
+	 }
+	}
+	var myscroll=new Scroll("myscroll",24);
+</script>
+
+
+	      <!-- toc -->	      
+	      	      
+
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">分类目录</h4>
+		<ul class="tag_box inline list-unstyled">
+		
+			<li><a href="/categories/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/categories/python/">python<span>1</span></a></li>
+		
+			<li><a href="/categories/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/categories/坑/">坑<span>1</span></a></li>
+		
+			<li><a href="/categories/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/categories/并发学习/">并发学习<span>1</span></a></li>
+		
+			<li><a href="/categories/我的翻译/">我的翻译<span>1</span></a></li>
+		
+			<li><a href="/categories/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/categories/测试/">测试<span>1</span></a></li>
+		
+			<li><a href="/categories/项目经验/">项目经验<span>2</span></a></li>
+		
+		</ul>
+	</div>
+	
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333 ">标签云</h4>
+		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/which/">which<span>1</span></a></li>
+		
+			<li><a href="/tags/hadoop/">hadoop<span>1</span></a></li>
+		
+			<li><a href="/tags/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/tags/EJB-EntityManager-JPA-Datasource/">EJB EntityManager JPA Datasource<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结，单点登录/">项目总结，单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/性能测试/">性能测试<span>1</span></a></li>
+		
+			<li><a href="/tags/redis，缓存/">redis，缓存<span>1</span></a></li>
+		
+			<li><a href="/tags/ab/">ab<span>1</span></a></li>
+		
+			<li><a href="/tags/单点登录/">单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/tags/服务器架构/">服务器架构<span>1</span></a></li>
+		
+			<li><a href="/tags/storm/">storm<span>1</span></a></li>
+		
+			<li><a href="/tags/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/tags/并发/">并发<span>1</span></a></li>
+		
+			<li><a href="/tags/JVM，垃圾收集器，HotSpot/">JVM，垃圾收集器，HotSpot<span>1</span></a></li>
+		
+			<li><a href="/tags/性能监控/">性能监控<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结/">项目总结<span>1</span></a></li>
+		
+			<li><a href="/tags/kafka/">kafka<span>1</span></a></li>
+		
+			<li><a href="/tags/zookeeper/">zookeeper<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>21</span></a></li>
+		 
+		</ul>
+	</div>
+
+
+	      
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">友情链接</h4>
+	<ul class="blogroll list-unstyled">
+	
+		<li style="font-size:14px"><i class="fa fa-share"></i><a href="http://hexo.io" title="Hexo site." target="_blank"]);">Hexo</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-github"></i><a href="https://github.com/AhahaGe" title="My Github account." target="_blank"]);">我的github</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-cloud-upload"></i><a href="http://www.qiniu.com" title="My Weibo account." target="_blank"]);">七牛云存储</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-chain"></i><a href="https://github.com/rudy-yuan/free2mind" title="free2mind theme." target="_blank"]);">Hexo-Theme-Free2mind</a></li>
+	
+	</ul>
+</div>
+
+
+	      <div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">近期评论</h4>
+	<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="0" data-show-admin="1" data-excerpt-length="100" ></ul>
+	
+	<script type="text/javascript">
+	    var duoshuoQuery = { short_name: 'blogoryza' };
+	    (function() {
+	    var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+
+</div>
+
+
+	
+	      <section id="recent-visitors" class="widget widget_recent_comments">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">最近访客</h4>
+  	<div class="panelbody clearfix"><ul class="ds-recent-visitors" data-num-items="30"></ul></div>
+</section>    
+	      </div> <!-- sidebar -->
+      </div> <!-- col-md-3 -->
+
+		</div>
+			
+
+</div><!-- row -->
+
+
+	<script type="text/javascript">
+	  var duoshuoQuery = { short_name: 'blogoryza' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  AhahaGe &copy; 2015-2016.
+  
+       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, <a href="https://swiftype.com/" target="_blank">Swiftype</a> and <a href="http://www.qiniu.com/" target="_blank">七牛云存储</a>.
+      <i class="fa fa-sitemap %>"></i> <a href="/sitemap.xml" target="_blank"> 站点地图</a>. <a href="http://www.miitbeian.gov.cn/">浙ICP备14039723号-1</a>.
+      
+      
+      <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259907039'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1259907039%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WSRpFx1x7aC6s9oHyBKz','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>

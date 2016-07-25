@@ -1,0 +1,521 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>linux命令 which | 稻子网博客</title>
+  <meta name="author" content="AhahaGe">
+  
+  <meta name="description" content="稻子网博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="linux命令 which"/>
+  <meta property="og:site_name" content="稻子网博客"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.ico" rel="icon">
+  
+
+  <!-- CSS -->
+
+
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">稻子网博客</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>文章归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/message" title="All the tags.">
+			  <i class="fa fa-pencil"></i>给我留言
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-info-circle"></i>关于本站
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+		<!-- content -->
+
+		<div class="slogan" style="margin-bottom: 17px">
+		  <h4 style="margin-top: 0;color: #333;font-size:15px;font-weight: normal;">
+			  当前位置&nbsp;:&nbsp;<a href="/" >首页&nbsp;</a>»&nbsp;文章分类&nbsp;:&nbsp;
+			
+				<a href="/categories/linux命令/">linux命令</a>
+			
+		  &nbsp;</a>»&nbsp; linux命令 which </h4>
+		</div>
+
+		<div id="top_search"></div>
+				 
+		
+
+		<div class="archive">	  
+			<div id="archives"> 
+				
+				<header class="entry-header">
+					<div class="entry-info" text-transform : capitalize>				     					      	      
+							
+						<span class="entry-date">
+							<span class="fa fa-calendar" aria-hidden="true"></span>
+							2016-07-20						      
+						</span>
+							  
+							  
+						<span class="author vcard">
+							<span class="fa fa-user" aria-hidden="true"></span>
+							<a href="/">AhahaGe</a> 	 	
+						</span>
+
+						<span class="comments-link">
+							<span class="fa fa-comments" aria-hidden="true"></span>
+							<span class="ds-thread-count" data-thread-key="2016/07/20/linux命令 which/">暂无评论</span>
+						</span>						
+							
+					</div>	
+
+									
+					<h3 class="entry-title"> 
+						<a href="/2016/07/20/linux命令 which/" >linux命令 which</a>
+					</h3>		
+						
+					<span style="font-size:15px"><p>&#160; &#160; &#160; &#160; <strong>平时会用很多linux命令，用过的都记一下，以后用就可以直接参考这里了，不需要去查找了</strong><br><a id="more"></a></p>
+<p>##which命令<br>&#160; &#160; &#160; &#160;which命令的作用是，在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p>
+<h3 id="1．命令格式："><a href="#1．命令格式：" class="headerlink" title="1．命令格式："></a>1．命令格式：</h3><p>&#160; &#160; &#160; &#160;which 可执行文件名称 </p>
+<h3 id="2．命令功能："><a href="#2．命令功能：" class="headerlink" title="2．命令功能："></a>2．命令功能：</h3><p>&#160; &#160; &#160; &#160;which指令会在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。</p>
+<h3 id="3．命令参数："><a href="#3．命令参数：" class="headerlink" title="3．命令参数："></a>3．命令参数：</h3><p>-n 　指定文件名长度，指定的长度必须大于或等于所有文件中最长的文件名。<br>-p 　与-n参数相同，但此处的包括了文件的路径。<br>-w 　指定输出时栏位的宽度。<br>-V 　显示版本信息</p>
+<h3 id="4．使用实例："><a href="#4．使用实例：" class="headerlink" title="4．使用实例："></a>4．使用实例：</h3><h4 id="实例1：查找文件、显示命令路径"><a href="#实例1：查找文件、显示命令路径" class="headerlink" title="实例1：查找文件、显示命令路径"></a>实例1：查找文件、显示命令路径</h4><p>命令：<br>&#160; &#160; &#160; &#160;which lsmod<br>输出：</p>
+<blockquote>
+<p>[root@localhost ~]# which pwd<br>/bin/pwd<br>[root@localhost ~]#  which adduser<br>/usr/sbin/adduser<br>[root@localhost ~]#</p>
+</blockquote>
+<p>说明：<br>&#160; &#160; &#160; &#160;which 是根据使用者所配置的 PATH 变量内的目录去搜寻可运行档的！所以，不同的 PATH 配置内容所找到的命令当然不一样的！</p>
+<h4 id="实例2：用-which-去找出-which"><a href="#实例2：用-which-去找出-which" class="headerlink" title="实例2：用 which 去找出 which"></a>实例2：用 which 去找出 which</h4><p>命令：<br> &#160; &#160; &#160; &#160;which which<br>输出：</p>
+<blockquote>
+<p>alias which=’alias | /usr/bin/which –tty-only –read-alias –show-dot –show-tilde’<br>/usr/bin/which<br>[root@localhost ~]#</p>
+</blockquote>
+<p>说明：<br>&#160; &#160; &#160; &#160;竟然会有两个 which ，其中一个是 alias 这就是所谓的『命令别名』，意思是输入 which 会等於后面接的那串命令！</p>
+<h4 id="实例3：找出-cd-这个命令"><a href="#实例3：找出-cd-这个命令" class="headerlink" title="实例3：找出 cd 这个命令"></a>实例3：找出 cd 这个命令</h4><p>命令：<br>&#160; &#160; &#160; &#160;which cd<br>输出：</p>
+<blockquote>
+<p>/usr/bin/which: no cd in (/usr/java/jdk1.8.0_66/bin:/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/home/hadoop/opt/hadoop/bin:/home/hadoop/opt/hadoop/sbin:/root/bin)</p>
+</blockquote>
+<p>说明：<br>&#160; &#160; &#160; &#160;cd 这个常用的命令竟然找不到啊！为什么呢？这是因为 cd 是bash 内建的命令！ 但是 which 默认是找 PATH 内所规范的目录，所以当然一定找不到的！</p>
+</span>
+				</header>
+
+				<!-- share -->
+				
+					
+
+					
+     <footer class="entry-meta">      
+
+	    <div class="fenlei" style="font-size:13.5px">
+			<span class="entry-categories">
+				<span class="fa fa-folder" aria-hidden="true"></span> 
+
+				
+					<a href="/categories/linux命令/">linux命令</a>
+				
+
+			</span>
+			
+			<span class="entry-tags">        
+				<span class="fa fa-tags" aria-hidden="true"></span> 
+
+				
+					<a href="/tags/linux命令/">linux命令</a>&nbsp;
+				
+					<a href="/tags/which/">which</a>&nbsp;
+				
+
+			</span>
+		</div>
+
+     
+		<!-- JiaThis Button BEGIN -->
+		<div class="jiathis_style" style="float:right;">
+			<span class="jiathis_txt">分享到：</span>
+			<a class="jiathis_button_qzone">QQ空间</a>
+			<a class="jiathis_button_tsina">新浪微博</a>
+			<a class="jiathis_button_weixin">微信</a>
+			<a class="jiathis_button_copy">复制</a>
+			<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+			<a class="jiathis_counter_style"></a>
+		</div>
+		<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+		<!-- JiaThis Button END -->
+		<br>
+    </footer>
+
+
+				
+			</div>	
+		</div>	 	        
+
+		 
+				
+
+				
+				   <p class="p2">下一篇 <a href="/2016/07/20/接口性能测试工具-ab/">接口性能测试工具-ab</a></p> 
+			
+		
+		<!-- comment -->
+		
+<section id="comment">
+  
+  	 <div class="ds-thread" data-thread-key="2016/07/20/linux命令 which/" data-title="linux命令 which" data-url="http://blog.oryza.cn/2016/07/20/linux命令 which/"></div>  
+  
+</section>
+
+		
+	</div> <!-- col-md-9/col-md-12 -->	
+
+	
+		<div id="side_meta">
+			
+      <div class="col-md-3">
+	      <div id="sidebar">
+	      
+  <div class="form-group has-success has-feedback" id="site_search">
+    <form class="site-search-form">
+        <input type="text" id="st-search-input" name="q" results="0" placeholder="搜索" class="st-search-input st-default-search-input form-control" />
+    </form>
+  </div>  
+
+	      <style type="text/css">
+  .cls_container{height:24px;overflow:hidden;}
+  .cls_container ul{list-style-type:none;margin:0;padding:0;margin-left:0px;}
+  .cls_container ul li{height:24px;line-height:24px;float:left;display:inline;}
+</style>
+
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">本站公告</h4>
+
+	<div id="myscroll" class="cls_container">
+		<ul>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		</ul>
+	</div>
+
+	<div id="showhint"></div>
+</div>
+
+<script type="text/javascript">
+	function $(element){
+	 if(arguments.length>1){
+	  for(var i=0,length=arguments.length,elements=[];i<length;i++){
+	   elements.push($(arguments[i]));
+	  }
+	  return elements;
+	 }
+	 if(typeof element=="string"){
+	  return document.getElementById(element);
+	 }else{
+	  return element;
+	 }
+	}
+	var Class={
+	 create:function(){
+	  return function(){
+	   this.initialize.apply(this,arguments);
+	  }
+	 }
+	}
+	Function.prototype.bind=function(object){
+	 var method=this;
+	 return function(){
+	  method.apply(object,arguments);
+	 }
+	}
+	var Scroll=Class.create();
+	Scroll.prototype={
+	 initialize:function(element,height){
+	  this.element=$(element);
+	  this.element.innerHTML+=this.element.innerHTML;
+	  this.height=height;
+	  this.maxHeight=this.element.scrollHeight/2;
+	  this.counter=0;
+	  this.scroll();
+	  this.timer="";
+	  this.element.onmouseover=this.stop.bind(this);
+	  this.element.onmouseout=function(){this.timer=setTimeout(this.scroll.bind(this),1000);}.bind(this);
+	 },
+	 scroll:function(){
+	  if(this.element.scrollTop<this.maxHeight){
+	   this.element.scrollTop++;
+	   this.counter++;
+	  }else{
+	   this.element.scrollTop=0;
+	   this.counter=0;
+	  }
+	  if(this.counter<this.height){
+	   this.timer=setTimeout(this.scroll.bind(this),20);
+	  }else{
+	   this.counter=0;
+	   this.timer=setTimeout(this.scroll.bind(this),3000);
+	  }
+	 },
+	 stop:function(){
+	  clearTimeout(this.timer);
+	 }
+	}
+	var myscroll=new Scroll("myscroll",24);
+</script>
+
+
+	      <!-- toc -->	      
+	      	      
+
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">分类目录</h4>
+		<ul class="tag_box inline list-unstyled">
+		
+			<li><a href="/categories/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/categories/python/">python<span>1</span></a></li>
+		
+			<li><a href="/categories/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/categories/坑/">坑<span>1</span></a></li>
+		
+			<li><a href="/categories/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/categories/并发学习/">并发学习<span>1</span></a></li>
+		
+			<li><a href="/categories/我的翻译/">我的翻译<span>1</span></a></li>
+		
+			<li><a href="/categories/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/categories/测试/">测试<span>1</span></a></li>
+		
+			<li><a href="/categories/项目经验/">项目经验<span>2</span></a></li>
+		
+		</ul>
+	</div>
+	
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333 ">标签云</h4>
+		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/单点登录/">单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结，单点登录/">项目总结，单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/hadoop/">hadoop<span>1</span></a></li>
+		
+			<li><a href="/tags/elasticsearch/">elasticsearch<span>1</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/tags/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/tags/redis，缓存/">redis，缓存<span>1</span></a></li>
+		
+			<li><a href="/tags/JVM，垃圾收集器，HotSpot/">JVM，垃圾收集器，HotSpot<span>1</span></a></li>
+		
+			<li><a href="/tags/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/tags/which/">which<span>1</span></a></li>
+		
+			<li><a href="/tags/kafka/">kafka<span>1</span></a></li>
+		
+			<li><a href="/tags/并发/">并发<span>1</span></a></li>
+		
+			<li><a href="/tags/性能监控/">性能监控<span>1</span></a></li>
+		
+			<li><a href="/tags/zookeeper/">zookeeper<span>1</span></a></li>
+		
+			<li><a href="/tags/服务器架构/">服务器架构<span>1</span></a></li>
+		
+			<li><a href="/tags/storm/">storm<span>1</span></a></li>
+		
+			<li><a href="/tags/EJB-EntityManager-JPA-Datasource/">EJB EntityManager JPA Datasource<span>1</span></a></li>
+		
+			<li><a href="/tags/性能测试/">性能测试<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结/">项目总结<span>1</span></a></li>
+		
+			<li><a href="/tags/ab/">ab<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>21</span></a></li>
+		 
+		</ul>
+	</div>
+
+
+	      
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">友情链接</h4>
+	<ul class="blogroll list-unstyled">
+	
+		<li style="font-size:14px"><i class="fa fa-share"></i><a href="http://hexo.io" title="Hexo site." target="_blank"]);">Hexo</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-github"></i><a href="https://github.com/AhahaGe" title="My Github account." target="_blank"]);">我的github</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-cloud-upload"></i><a href="http://www.qiniu.com" title="My Weibo account." target="_blank"]);">七牛云存储</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-chain"></i><a href="https://github.com/rudy-yuan/free2mind" title="free2mind theme." target="_blank"]);">Hexo-Theme-Free2mind</a></li>
+	
+	</ul>
+</div>
+
+
+	      <div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">近期评论</h4>
+	<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="0" data-show-admin="1" data-excerpt-length="100" ></ul>
+	
+	<script type="text/javascript">
+	    var duoshuoQuery = { short_name: 'blogoryza' };
+	    (function() {
+	    var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+
+</div>
+
+
+	
+	      <section id="recent-visitors" class="widget widget_recent_comments">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">最近访客</h4>
+  	<div class="panelbody clearfix"><ul class="ds-recent-visitors" data-num-items="30"></ul></div>
+</section>    
+	      </div> <!-- sidebar -->
+      </div> <!-- col-md-3 -->
+
+		</div>
+			
+
+</div><!-- row -->
+
+
+	<script type="text/javascript">
+	  var duoshuoQuery = { short_name: 'blogoryza' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  AhahaGe &copy; 2015-2016.
+  
+       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, <a href="https://swiftype.com/" target="_blank">Swiftype</a> and <a href="http://www.qiniu.com/" target="_blank">七牛云存储</a>.
+      <i class="fa fa-sitemap %>"></i> <a href="/sitemap.xml" target="_blank"> 站点地图</a>. <a href="http://www.miitbeian.gov.cn/">浙ICP备14039723号-1</a>.
+      
+      
+      <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259907039'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1259907039%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WSRpFx1x7aC6s9oHyBKz','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>

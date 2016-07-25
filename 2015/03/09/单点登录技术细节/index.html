@@ -1,0 +1,567 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>单点登录技术细节 | 稻子网博客</title>
+  <meta name="author" content="AhahaGe">
+  
+  <meta name="description" content="稻子网博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="单点登录技术细节"/>
+  <meta property="og:site_name" content="稻子网博客"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.ico" rel="icon">
+  
+
+  <!-- CSS -->
+
+
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">稻子网博客</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>文章归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/message" title="All the tags.">
+			  <i class="fa fa-pencil"></i>给我留言
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-info-circle"></i>关于本站
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+		<!-- content -->
+
+		<div class="slogan" style="margin-bottom: 17px">
+		  <h4 style="margin-top: 0;color: #333;font-size:15px;font-weight: normal;">
+			  当前位置&nbsp;:&nbsp;<a href="/" >首页&nbsp;</a>»&nbsp;文章分类&nbsp;:&nbsp;
+			
+				<a href="/categories/项目经验/">项目经验</a>
+			
+		  &nbsp;</a>»&nbsp; 单点登录技术细节 </h4>
+		</div>
+
+		<div id="top_search"></div>
+				 
+		
+
+		<div class="archive">	  
+			<div id="archives"> 
+				
+				<header class="entry-header">
+					<div class="entry-info" text-transform : capitalize>				     					      	      
+							
+						<span class="entry-date">
+							<span class="fa fa-calendar" aria-hidden="true"></span>
+							2015-03-09						      
+						</span>
+							  
+							  
+						<span class="author vcard">
+							<span class="fa fa-user" aria-hidden="true"></span>
+							<a href="/">AhahaGe</a> 	 	
+						</span>
+
+						<span class="comments-link">
+							<span class="fa fa-comments" aria-hidden="true"></span>
+							<span class="ds-thread-count" data-thread-key="2015/03/09/单点登录技术细节/">暂无评论</span>
+						</span>						
+							
+					</div>	
+
+									
+					<h3 class="entry-title"> 
+						<a href="/2015/03/09/单点登录技术细节/" >单点登录技术细节</a>
+					</h3>		
+						
+					<span style="font-size:15px"><p>#单点登录各部分技术细节<br>本文记述了单点登录系统所用的各种技术细节，实现思路请参考<a href="http://blog.oryza.cn/2015/03/05/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95%E7%B3%BB%E7%BB%9F/">单点登录系统</a>，玩透整个项目，为自己做一些技术积累，也欢迎有做过这方面的朋友一起交流讨论。<br><a id="more"></a></p>
+<p>##1.职责链模式实现链式验证</p>
+<p>##2.单点登录是如何用cookie实现的<br>每次验证都重定向到CAS Server验证：<br>&#160; &#160; &#160; &#160;第一次验证的时候，CAS Server生成cookie，cookie是生成在CAS Server域名下的，然后返回给浏览器<br>&#160; &#160; &#160; &#160;第二次app2登录验证，浏览器重定向到CAS Server，这时候浏览器会带上cookie，这个时候CAS Server就认为用户已经登录过。<br>&#160; &#160; &#160; &#160;这是我当时理解的笔记，对于这一点我理解了很久，也翻了很多论坛，差点以为这个方案是不对的，因为网上有说sendRedirect之后cookie失效，然后去找cookie跨域的解决方案，留意了一下有几种（jsonp；iframe；同一应用服务器内共享方法：设置cookie.setPath(“/“)；跨域共享cookie的方法：设置cookie.setDomain(“.”)，要以点开头；p3p header等），在一篇国外的论坛上看到有通过sendRedirect（）实现的方式，然后再来理解我做的这个项目。当时也做了很多测试，领导也和我说了几次，127.0.0.1和localhost不是同一个域名，静下心来终于理解了。</p>
+<blockquote>
+<ol>
+<li>跳转方式必须用重定向，因为只有重定向才能跨应用访问</li>
+<li>如果cookie是在localhost域名下生成，应用端重定向到127.0.0.1/login.htm下不能拿到cookie，因为cookie是不能跨域访问;同理，如果cookie是在127.0.0.1域名下生成，应用重定向到localhost/login.htm下也不能拿到cookie</li>
+<li>重定向，当用sendRedirect重定向后，地址栏为<a href="http://localhost/login.htm，这是一个新的请求，请求地址就是http://localhost/login.htm" target="_blank" rel="external">http://localhost/login.htm，这是一个新的请求，请求地址就是http://localhost/login.htm</a>  请求方是CAS SERVER，所以没有跨域</li>
+<li>单点的cookie只是在CAS SERVER这个应用里面保存和使用，返回也是从authentication返回给login.htm这个客户端，而不是编审或者其它的接入系统，所以不会存在跨域问题</li>
+</ol>
+</blockquote>
+<p>##3.对于cookie,session的一些理解<br>Cookie　　<br>什么是cookies呢? cookie 是浏览器保存在用户计算机上的少量数据。它与特定的WEB页或WEB站点关联起来，自动地在WEB浏览器和WEB服务器之间传递。</p>
+<p>Cookies最初设计时，是为了CGI编程。但是，我们也可以使用Javascript脚本来操纵cookies。在本文里，我们将演示如何使用Javascript脚本来操纵cookies。(如果有需求，我可能会在以后的文章里介绍如何使用Perl进行cookie管理。但是如果实在等不得，那么我现在就教你一手：仔细看看CGI.pm。在这个CGI包里有一个cookie()函数，可以用它建立cookie。但是，还是让我们先来介绍cookies的本质。 </p>
+<p>在Javascript脚本里，一个cookie 实际就是一个字符串属性。当你读取cookie的值时，就得到一个字符串，里面当前WEB页使用的所有cookies的名称和值。每个cookie除了name名称和value值这两个属性以外，还有四个属性。这些属性是： expires过期时间、 path路径、 domain域、以及 secure安全。</p>
+<p>Expires – 过期时间。指定cookie的生命期。具体是值是过期日期。如果想让cookie的存在期限超过当前浏览器会话时间，就必须使用这个属性。当过了到期日期时，浏览器就可以删除cookie文件，没有任何影响。</p>
+<p>Path – 路径。指定与cookie关联的WEB页。值可以是一个目录，或者是一个路径。如果<a href="http://www.zdnet.com/devhead/index.html" target="_blank" rel="external">http://www.zdnet.com/devhead/index.html</a> 建立了一个cookie，那么在<a href="http://www.zdnet.com/devhead/目录里的所有页面，以及该目录下面任何子目录里的页面都可以访问这个cookie。这就是说，在http://www.zdnet.com/devhead/stories/articles" target="_blank" rel="external">http://www.zdnet.com/devhead/目录里的所有页面，以及该目录下面任何子目录里的页面都可以访问这个cookie。这就是说，在http://www.zdnet.com/devhead/stories/articles</a> 里的任何页面都可以访问<a href="http://www.zdnet.com/devhead/index.html建立的cookie。但是，如果http://www.zdnet.com/zdnn/" target="_blank" rel="external">http://www.zdnet.com/devhead/index.html建立的cookie。但是，如果http://www.zdnet.com/zdnn/</a> 需要访问<a href="http://www.zdnet.com/devhead/index.html设置的cookes，该怎么办？这时，我们要把cookies的path属性设置成“/”。在指定路径的时候，凡是来自同一服务器，URL里有相同路径的所有WEB页面都可以共享cookies。现在看另一个例子：如果想让" target="_blank" rel="external">http://www.zdnet.com/devhead/index.html设置的cookes，该怎么办？这时，我们要把cookies的path属性设置成“/”。在指定路径的时候，凡是来自同一服务器，URL里有相同路径的所有WEB页面都可以共享cookies。现在看另一个例子：如果想让</a> <a href="http://www.zdnet.com/devhead/filters/" target="_blank" rel="external">http://www.zdnet.com/devhead/filters/</a> 和<a href="http://www.zdnet.com/devhead/stories/共享cookies，就要把path设成“/devhead”。" target="_blank" rel="external">http://www.zdnet.com/devhead/stories/共享cookies，就要把path设成“/devhead”。</a></p>
+<p>Domain – 域。指定关联的WEB服务器或域。值是域名，比如zdnet.com。这是对path路径属性的一个延伸。如果我们想让catalog.mycompany.com 能够访问shoppingcart.mycompany.com设置的cookies，该怎么办? 我们可以把domain属性设置成“mycompany.com”，并把path属性设置成“/”。FYI：不能把cookies域属性设置成与设置它的服务器的所在域不同的值。</p>
+<p>Secure – 安全。指定cookie的值通过网络如何在用户和WEB服务器之间传递。这个属性的值或者是“secure”，或者为空。缺省情况下，该属性为空，也就是使用不安全的HTTP连接传递数据。如果一个 cookie 标记为secure，那么，它与WEB服务器之间就通过HTTPS或者其它安全协议传递数据。不过，设置了secure属性不代表其他人不能看到你机器本地保存的cookie。换句话说，把cookie设置为secure，只保证cookie与WEB服务器之间的数据传输过程加密，而保存在本地的cookie文件并不加密。如果想让本地cookie也加密，得自己加密数据。</p>
+<p>Cookies 一些限制</p>
+<p>因为某些原因Cookies 的名声很不好。许多人利用cookies做一些卑鄙的事情，比如流量分析、点击跟踪。Cookies 也不是非常安全，特别是没有secure属性的cookies。不过，即使你用了安全的cookies，如果你和别人共用计算机，比如在网吧，那么别人就可以窥探计算机硬盘上未加密保存的cookie文件，也就有可能窃取你的敏感信息。所以，如果你是一个WEB开发人员，那么你要认真考虑这些问题。不要滥用cookies。不要把用户可能认为是敏感的数据保存在cookies里。如果把用户的社会保险号、信用卡号等保存在cookie里，等于把这些敏感信息放在窗户纸下，无异于把用户投到极大危险之中。一个好的原则是，如果你不想陌生人了解你的这些信息，那就不要把它们保存在cookies里。 </p>
+<p>另外，cookies还有一些实际的限制。Cookies保留在计算机上，不跟着用户走。如果用户想换计算机，那么新计算机无法得到原来的cookie。甚至用户在同一台计算机上使用不同浏览器，也得不到原来的cookie：Netscape 不能读取Internet Explorer 的cookies。 </p>
+<p>还有，用户也不愿意接受cookies。所以不要以为所有的浏览器都能接受你发出的cookies。如果浏览器不接受cookies，你要保证自己的WEB站点不致因此而崩溃或中断。</p>
+<p>另外WEB 浏览器能保留的cookies不一定能超过300个。也没有标准规定浏览器什么时候、怎么样作废cookies。所以达到限制时，浏览器能够有效地随机删除cookies。浏览器保留的来自一个WEB服务器上的cookies，不超过20个，每个cookie的数据（包括名称和值），不超过4K字节。(不过，本文里的cookie尺寸没问题，它只占了12 K字节，保存在3个3 cookies里。)</p>
+<p>简而言之，注意保持cookie简单。不要依赖cookies的存在，不要在每个cookie里保存太多信息。不要保存太多的cookes。但是，抛除这些限制，在技巧高超的WEB管理员手里，cookie的概念是一个有用的工具。  </p>
+<blockquote>
+<p><a href="http://www.cnblogs.com/forward/archive/2007/02/02/638417.html" target="_blank" rel="external">参考链接</a> 　　</p>
+</blockquote>
+<p><strong>和cookie相关的单点登录安全性考虑：</strong></p>
+<ol>
+<li>内存cookie代替硬盘cookie  硬盘cookie，是指在你设置了cookie的Expires属性，此时cookie将保存到你的硬盘上</li>
+<li>其次，为进一步减少风险，不应该在COOKIE中直接保存用户凭证，而是使用一个无意义的标识符如UUID来表示，而登陆服务可以通过这个UUID查找到真正的用户凭证</li>
+<li>其次因为http使用明文传输，通过网络侦听的方式很容易获取COOKIE，所以用户到登陆服务间的连接应该采用https。　　</li>
+</ol>
+<p>Session:<br>什么是session，为什么要有session？　　<br>The Hypertext Transfer Protocol (HTTP) is by design a stateless protocol. To build effective Web applications, it is imperative that requests from a particular client be associated with each other. Many strategies for session tracking have evolved over time, but all are difficult or troublesome for the programmer to use directly.</p>
+<p>Session实现机制：　　<br>Session tracking through HTTP cookies is the most used session tracking mechanism and is required to be supported by all servlet containers.<br>The container sends a cookie to the client. The client will then return the cookie on each subsequent request to the server, unambiguously associating the request with a session. The standard name of the session tracking cookie must be JSESSIONID, which must be supported by all 3.0 compliant containers. Containers may allow the name of the session tracking cookie to be customized through container specific configuration.</p>
+<p>URL rewriting is the lowest common denominator of session tracking. When a client will not accept a cookie, URL rewriting may be used by the server as the basis for session tracking. URL rewriting involves adding data, a session ID, to the URL path that is interpreted by the container to associate the request with a session. The session ID must be encoded as a path parameter in the URL string. The name of the parameter must be jsessionid. Here is an example of a URL containing encoded path information: <a href="http://www.myserver.com/catalog/index.html;jsessionid=1234" target="_blank" rel="external">http://www.myserver.com/catalog/index.html;jsessionid=1234</a><br>URL rewriting exposes session identifiers in logs, bookmarks, referer headers, cached HTML, and the URL bar. URL rewriting should not be used as a session tracking mechanism where cookies or SSL sessions are supported and suitable.</p>
+<p>Session在服务器端具体是怎么实现的呢？　　<br>我们使用session的时候一般都是这么使用的：request.getSession()或者request.getSession(true)。　　　　</p>
+<ol>
+<li>服务器就检查是不是已经存在对应的Session对象，见HttpRequestBase类doGetSession(boolean create)方法里面的manager.findSession(requestSessionId)用于查找此会话ID对应的session对象。</li>
+<li>requestSessionId从哪里来呢？这个肯定是通过Session实现机制的cookie或URL重写来设置的。见HttpProcessor类中的parseHeaders(SocketInputStream input)或者HttpOrocessor类中的parseRequest(SocketInputStream input, OutputStream output);</li>
+<li>Tomcat实现是通过一个HashMap实现，见ManagerBase.java的findSession(String id)</li>
+<li>Session本身也是实现为一个HashMap，因为Session设计为存放key-value键值对。 </li>
+<li>Tomcat里面Session实现类是StandardSession，里面一个attributes属性:所有会话信息的存取都是通过这个属性来实现的。</li>
+<li>Session会话信息不会一直在服务器端保存，超过一定的时间期限就会被删除，这个时间期限可以在web.xml中进行设置，不设置的话会有一个默认值，Tomcat的默认值是60。那么服务器端是怎么判断会话过期的呢？原理服务器会启动一个线程，一直查询所有的Session对象，检查不活动的时间是否超过设定值，如果超过就将其删除。见StandardManager类，它实现了Runnable接口。</li>
+<li>Session信息在create,expire等事情的时候都会触发相应的Listener事件，从而可以对session信息进行监控，这些Listener只需要继承HttpSessionListener，并配置在web.xml文件中。</li>
+</ol>
+<p>详情可参考：<a href="http://www.blogjava.net/persister/archive/2010/08/24/329838.html" target="_blank" rel="external">Session原理和Tomcat实现分析</a></p>
+<p>##4.单点登录如何增加HTTPS功能，以及HTTPS的原理<br>如何增加HTTPS功能:<br>1.生成证书  keytools generate key<br>2.把虚拟证书导出成crt文件<br>3.为客户端JVM导入证书   如果不做可能会出现这个错误  请求https错误： unable to find valid certification path to requested target<br>4.应用证书到Web服务器-Tomcat<br>5.tomcat目录的conf/server.xml<br>    <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> &lt;Connector port=&quot;8443&quot; protocol=&quot;HTTP/1.1&quot; SSLEnabled=&quot;true&quot;</div><div class="line">          maxThreads=&quot;150&quot; scheme=&quot;https&quot; secure=&quot;true&quot;</div><div class="line">          clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot; </div><div class="line">           keystoreFile=&quot;c:/keys/javacrazyerkey&quot;</div><div class="line">           keystorePass=&quot;cheney&quot;</div><div class="line">/&gt;</div><div class="line">keystoreFile：在第一步创建的key存放位置 </div><div class="line">keystorePass：创建证书时的密码</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>关于证书工具的命令各版本会有些不同，笔者在借鉴网上帖子操作的时候就遇到命令无效的情况，最终查阅官方文档把问题解决了，所以请参考相应版本的<a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/keytool.html" target="_blank" rel="external">Java 7 keytool参考文档</a>。　　</p>
+</blockquote>
+<p>HTTPS原理：<br>&#160; &#160; &#160; &#160;HTTPS在传输数据之前需要客户端（浏览器）与服务端（网站）之间进行一次握手，在握手过程中将确立双方加密传输数据的密码信息。TLS/SSL协议不仅仅是一套加密传输的协议，更是一件经过艺术家精心设计的艺术品，TLS/SSL中使用了非对称加密，对称加密以及HASH算法。握手过程的简单描述如下：　　<br>1.浏览器将自己支持的一套加密规则发送给网站。　　<br>2.网站从中选出一组加密算法与HASH算法，并将自己的身份信息以证书的形式发回给浏览器。证书里面包含了网站地址，加密公钥，以及证书的颁发机构等信息。　　<br>3.获得网站证书之后浏览器要做以下工作：　　<br>&#160; &#160; &#160; &#160;a) 验证证书的合法性（颁发证书的机构是否合法，证书中包含的网站地址是否与正在访问的地址一致等），如果证书受信任，则浏览器栏里面会显示一个小锁头，否则会给出证书不受信的提示。　　<br>&#160; &#160; &#160; &#160;b) 如果证书受信任，或者是用户接受了不受信的证书，浏览器会生成一串随机数的密码，并用证书中提供的公钥加密。　　<br>&#160; &#160; &#160; &#160;c) 使用约定好的HASH计算握手消息，并使用生成的随机数对消息进行加密，最后将之前生成的所有信息发送给网站。　　<br>4.网站接收浏览器发来的数据之后要做以下的操作：　　<br>&#160; &#160; &#160; &#160;a) 使用自己的私钥将信息解密取出密码，使用密码解密浏览器发来的握手消息，并验证HASH是否与浏览器发来的一致。　　<br>&#160; &#160; &#160; &#160;b) 使用密码加密一段握手消息，发送给浏览器。　　<br>5.浏览器解密并计算握手消息的HASH，如果与服务端发来的HASH一致，此时握手过程结束，之后所有的通信数据将由之前浏览器生成的随机密码并利用对称加密算法进行加密。这里浏览器与网站互相发送加密的握手消息并验证，目的是为了保证双方都获得了一致的密码，并且可以正常的加密解密数据，为后续真正数据的传输做一次测试。另外，HTTPS一般使用的加密与HASH算法如下：　　<br>&#160; &#160; &#160; &#160;非对称加密算法：RSA，DSA/DSS　　<br>&#160; &#160; &#160; &#160;对称加密算法：AES，RC4，3DES　　<br>&#160; &#160; &#160; &#160;HASH算法：MD5，SHA1，SHA256　　<br>其中非对称加密算法用于在握手过程中加密生成的密码，对称加密算法用于对真正传输的数据进行加密，而HASH算法用于验证数据的完整性。由于浏览器生成的密码是整个数据加密的关键，因此在传输的时候使用了非对称加密算法对其加密。非对称加密算法会生成公钥和私钥，公钥只能用于加密数据，因此可以随意传输，而网站的私钥用于对数据进行解密，所以网站都会非常小心的保管自己的私钥，防止泄漏。<br>&#160; &#160; &#160; &#160;TLS握手过程中如果有任何错误，都会使加密连接断开，从而阻止了隐私信息的传输。正是由于HTTPS非常的安全，攻击者无法从中找到下手的地方，于是更多的是采用了假证书的手法来欺骗客户端，从而获取明文的信息，但是这些手段都可以被识别出来，我将在后续的文章进行讲述。不过2010年还是有安全专家发现了TLS 1.0协议处理的一个<a href="http://www.theregister.co.uk/2011/09/19/beast_exploits_paypal_ssl/" target="_blank" rel="external">漏洞</a>，实际上这种称为BEAST的攻击方式早在2002年就已经被安全专家发现，只是没有公开而已。目前微软和Google已经对此漏洞进行了<a href="http://support.microsoft.com/kb/2643584/en-us https://src.chromium.org/viewvc/chrome?view=rev&amp;revision=90643" target="_blank" rel="external">修复</a>。</p>
+<p>##5.日志记录<br>&#160; &#160; &#160; &#160;<strong>用slf4j和log4j2替换apache common和log4j1</strong>　　  </p>
+<p>为什么选用log4j2，而不是log4j1或logback？<br>&#160; &#160; &#160; &#160;从<a href="http://logging.apache.org/log4j/2.x/" target="_blank" rel="external">log4j2主页</a>可以发现：Apache Log4j 2 is an upgrade to Log4j that provides significant improvements over its predecessor, Log4j 1.x, and provides many of the improvements available in Logback while fixing some inherent problems in Logback’s architecture.选用log4j2主要是因为它的<a href="http://logging.apache.org/log4j/2.x/performance.html" target="_blank" rel="external">性能</a>是目前最好的，尤其在异步日志记录方面，因为它是基于了<a href="http://lmax-exchange.github.io/disruptor/" target="_blank" rel="external">LMAX Disruptor</a> library。  </p>
+<p>为什么选用slf4j而不是apache common？  </p>
+<p>&#160; &#160; &#160; &#160;common-logging通过动态查找的机制，在程序运行时自动找出真正使用的日志库。由于它使用了ClassLoader寻找和载入底层的日志库， 导致了象OSGI这样的框架无法正常工作，因为OSGI的不同的插件使用自己的ClassLoader。 OSGI的这种机制保证了插件互相独立，然而却使Apache Common-Logging无法工作。</p>
+<p>&#160; &#160; &#160; &#160;slf4j在编译时静态绑定真正的Log库,因此可以再OSGI中使用。另外，SLF4J 支持参数化的log字符串，避免了之前为了减少字符串拼接的性能损耗而不得不写的if(logger.isDebugEnable())，现在你可以直接写：logger.debug(“current user is: {}”, user)。拼装消息被推迟到了它能够确定是不是要显示这条消息的时候，但是获取参数的代价并没有幸免。</p>
+<p>&#160; &#160; &#160; &#160;SLF4J的作者就是Log4j的作者，他正在开发logback来代替log4j，logback有更高的性能。logback支持上面提到的logger.error(“Temperature set to {}. Old temperature was {}.”, t, oldT); commons-logging没有提供类似的接口，SLF4J提供了，而且解决了classloader的问题。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Object[] params = &#123;value1, value2, value3&#125;; </div><div class="line">logger.debug(“first value: &#123;&#125;, second value: &#123;&#125; and third value: &#123;&#125;.”, params);</div></pre></td></tr></table></figure></p>
+<p>现在，Hibernate、Jetty、Spring-OSGi、Wicket和MINA等项目都已经迁移到了SLF4J。那我们也迁移吧。</p>
+<p>Usage:<br>&#160; &#160; &#160; &#160;<a href="http://logging.apache.org/log4j/2.x/log4j-slf4j-impl/apidocs/index.html" target="_blank" rel="external">SLF4J Binding</a>    A bridge that permits applications written against the SLF4J API to log using Log4j.<br>&#160; &#160; &#160; &#160;The SLF4J binding provided in this component cause all the SLF4J APIs to be routed to Log4j 2. Simply include the Log4j 2 SLF4J Binding jar along with the Log4j 2 jars and SLF4J API jar to cause all SLF4J logging to be handled by Log4j。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">&lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;</div><div class="line">&lt;artifactId&gt;log4j-slf4j-impl&lt;/artifactId&gt;</div><div class="line">&lt;version&gt;2.1&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line"></div><div class="line">&lt;dependency&gt;</div><div class="line"> &lt;groupId&gt;org.slf4j&lt;/groupId&gt;</div><div class="line"> &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;</div><div class="line"> &lt;version&gt;1.7.7&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line"></div><div class="line">&lt;dependency&gt;</div><div class="line">&lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;</div><div class="line">&lt;artifactId&gt;log4j-api&lt;/artifactId&gt;</div><div class="line">&lt;version&gt;2.1&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line"></div><div class="line">&lt;dependency&gt;</div><div class="line">&lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;</div><div class="line">&lt;artifactId&gt;log4j-core&lt;/artifactId&gt;</div><div class="line">     &lt;version&gt;2.1&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure></p>
+<p>代码中用法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">private static final Logger logger = LoggerFactory</div><div class="line">   .getLogger(AuthenticationController.class);</div><div class="line">log.info(&quot;&#123;&#125;,&#123;&#125;,&#123;&#125;&quot;,,,);</div></pre></td></tr></table></figure></p>
+<p>##6.在负载均衡中获取客户端的真实IP<br>&#160; &#160; &#160; &#160;在JSP里，获取客户端的IP地址的方法是：request.getRemoteAddr（），这种方法在大部分情况下都是有效的。但是在通过了Apache，Squid等反向代理软件就不能获取到客户端的真实IP地址了。<br>&#160; &#160; &#160; &#160;如果使用了反向代理软件，将<a href="http://192.168.1.110：2046/" target="_blank" rel="external">http://192.168.1.110：2046/</a> 的URL反向代理为 <a href="http://www.bt285.cn" target="_blank" rel="external">http://www.bt285.cn</a> / 的URL时，用request.getRemoteAddr（）方法获取的IP地址是：127.0.0.1　或　192.168.1.110，而并不是客户端的真实IP。<br>&#160; &#160; &#160; &#160;经过代理以后，由于在客户端和服务之间增加了中间层，因此服务器无法直接拿到客户端的IP，服务器端应用也无法直接通过转发请求的地址返回给客户端。但是在转发请求的HTTP头信息中，增加了X－FORWARDED－FOR信息。用以跟踪原有的客户端IP地址和原来客户端请求的服务器地址。当我们访问<a href="http://www.5q520.cn" target="_blank" rel="external">http://www.5q520.cn</a> /index.jsp/ 时，其实并不是我们浏览器真正访问到了服务器上的index.jsp文件，而是先由代理服务器去访问<a href="http://192.168.1.110：2046/index.jsp" target="_blank" rel="external">http://192.168.1.110：2046/index.jsp</a> ，代理服务器再将访问到的结果返回给我们的浏览器，因为是代理服务器去访问index.jsp的，所以index.jsp中通过request.getRemoteAddr（）的方法获取的IP实际上是代理服务器的地址，并不是客户端的IP地址。</p>
+<p>&#160; &#160; &#160; &#160;于是可得出获得客户端真实IP地址的方法一，用<a href="http://baike.baidu.com/link?url=kgNGLbEuqejUC05OXVONACH_boaUXDZamvI2XeSthxYyVu_CMrkEomBt9aTuYQyC9vkZsX-bRgC5L-9p89EcP_" target="_blank" rel="external">X-Forwarded-For</a>头来获取客户端真实IP地址　　<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public String getRemortIP(HttpServletRequest request) &#123; </div><div class="line">  if (request.getHeader(&quot;x-forwarded-for&quot;) == null) &#123; </div><div class="line">  return request.getRemoteAddr(); </div><div class="line">  &#125; </div><div class="line">  return request.getHeader(&quot;x-forwarded-for&quot;); </div><div class="line">&#125; </div><div class="line">```    </div><div class="line">&amp;#160; &amp;#160; &amp;#160; &amp;#160;可是当我访问http://www.5a520.cn /index.jsp/ 时，返回的IP地址始终是unknown，也并不是如上所示的127.0.0.1　或　192.168.1.110了，而我访问http://192.168.1.110：2046/index.jsp 时，则能返回客户端的真实IP地址，写了个方法去验证。原因出在了Squid上。squid.conf 的配制文件　forwarded_for 项默认是为on，如果 forwarded_for 设成了 off 　则：X-Forwarded-For： unknown</div><div class="line">  </div><div class="line">&amp;#160; &amp;#160; &amp;#160; &amp;#160;于是可得出获得客户端真实IP地址的方法二：</div></pre></td></tr></table></figure></p>
+<p>public String getIpAddr(HttpServletRequest request) {<br>      String ip = request.getHeader(“x-forwarded-for”);<br>      if(ip == null || ip.length() == 0 || “unknown”.equalsIgnoreCase(ip)) {<br>          ip = request.getHeader(“Proxy-Client-IP”);<br>      }<br>      if(ip == null || ip.length() == 0 || “unknown”.equalsIgnoreCase(ip)) {<br>          ip = request.getHeader(“WL-Proxy-Client-IP”);<br>      }<br>      if(ip == null || ip.length() == 0 || “unknown”.equalsIgnoreCase(ip)) {<br>          ip = request.getRemoteAddr();<br>      }<br>      return ip;<br>  }<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">##7.HTTPURLConnection的使用</div><div class="line">以下是对日常使用HTTPURLConnection注释非常详细的分享。</div><div class="line">```/* </div><div class="line">* URL请求的类别分为二类,GET与POST请求。二者的区别在于： </div><div class="line">* a:) get请求可以获取静态页面，也可以把参数放在URL字串后面，传递给servlet， </div><div class="line">* b:) post与get的不同之处在于post的参数不是放在URL字串里面，而是放在http请求的正文内。 </div><div class="line">*/ </div><div class="line"></div><div class="line">URL url = new URL(&quot;http://localhost:8080/TestHttpURLConnectionPro.do&quot;); </div><div class="line">HttpURLConnection urlConn = (HttpURLConnection) url.openConnection(); </div><div class="line"></div><div class="line">// 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在 </div><div class="line">// http正文内，因此需要设为true, 默认情况下是false; </div><div class="line">urlConn.setDoOutput(true); </div><div class="line"></div><div class="line">// 设置是否从httpUrlConnection读入，默认情况下是true; </div><div class="line">urlConn.setDoInput(true); </div><div class="line"></div><div class="line">// Post 请求不能使用缓存 </div><div class="line">urlConn.setUseCaches(false); </div><div class="line"></div><div class="line">// 设定传送的内容类型是可序列化的java对象 </div><div class="line">// (如果不设此项,在传送序列化对象时,当WEB服务默认的不是这种类型时可能抛java.io.EOFException) </div><div class="line">urlConn.setRequestProperty(&quot;Content-type&quot;,&quot;application/x-java-serialized-object&quot;); </div><div class="line"></div><div class="line">// 设定请求的方法为&quot;POST&quot;，默认是GET </div><div class="line">urlConn.setRequestMethod(&quot;POST&quot;); </div><div class="line"></div><div class="line">// 连接，上面对urlConn的所有配置必须要在connect之前完成， </div><div class="line">urlConn.connect(); </div><div class="line"></div><div class="line">// 此处getOutputStream会隐含的进行connect (即：如同调用上面的connect()方法， </div><div class="line">// 所以在开发中不调用上述的connect()也可以)。 </div><div class="line">OutputStream outStrm = urlConn.getOutputStream(); </div><div class="line"></div><div class="line">// 现在通过输出流对象构建对象输出流对象，以实现输出可序列化的对象。 </div><div class="line">ObjectOutputStream oos = new ObjectOutputStream(outStrm); </div><div class="line"></div><div class="line">// 向对象输出流写出数据，这些数据将存到内存缓冲区中 </div><div class="line">oos.writeObject(new String(&quot;我是测试数据&quot;)); </div><div class="line"></div><div class="line">// 刷新对象输出流，将任何字节都写入潜在的流中（些处为ObjectOutputStream） </div><div class="line">oos.flush(); </div><div class="line"></div><div class="line">// 关闭流对象。此时，不能再向对象输出流写入任何数据，先前写入的数据存在于内存缓冲区中, </div><div class="line">// 再调用下边的getInputStream()函数时才把准备好的http请求正式发送到服务器 </div><div class="line">oos.close(); </div><div class="line"></div><div class="line">// 调用HttpURLConnection连接对象的getInputStream()函数, </div><div class="line">// 将内存缓冲区中封装好的完整的HTTP请求电文发送到服务端。 </div><div class="line">InputStream inStrm = urlConn.getInputStream(); // &lt;===注意，实际发送请求的代码段就在这里 </div><div class="line"></div><div class="line">//---------------------------------- </div><div class="line">/* </div><div class="line">* Post传参的方法 </div><div class="line">*/ </div><div class="line">OutputStream os = urlConn.getOutputStream(); </div><div class="line">String param = new String(); </div><div class="line">param = &quot;CorpID=123&amp;LoginName=qqq&amp;name=&quot; + URLEncoder.encode(&quot;汉字&quot;,&quot;GBK&quot;); ; </div><div class="line">os.write(param.getBytes()); </div><div class="line"></div><div class="line">//---------------------------------- </div><div class="line">/* </div><div class="line">* 超时设置，防止 网络异常的情况下，可能会导致程序僵死而不继续往下执行 </div><div class="line">*/ </div><div class="line"></div><div class="line">//JDK 1.5以前的版本，只能通过设置这两个系统属性来控制网络超时: </div><div class="line">//连接主机的超时时间（单位：毫秒） </div><div class="line">System.setProperty(&quot;sun.net.client.defaultConnectTimeout&quot;, &quot;30000&quot;); </div><div class="line">//从主机读取数据的超时时间（单位：毫秒） </div><div class="line">System.setProperty(&quot;sun.net.client.defaultReadTimeout&quot;, &quot;30000&quot;); </div><div class="line"></div><div class="line">//在JDK 1.5以后可以这样来设置超时时间 </div><div class="line">HttpURLConnection urlCon = (HttpURLConnection)url.openConnection(); </div><div class="line">urlCon.setConnectTimeout(30000); </div><div class="line">urlCon.setReadTimeout(30000); </div><div class="line"></div><div class="line">//---------------------------------- </div><div class="line">/* </div><div class="line">* 总结： </div><div class="line">* HttpURLConnection的connect()函数，实际上只是建立了一个与服务器的tcp连接，并没有实际发送http请求。 </div><div class="line">* 无论是post还是get，http请求实际上直到HttpURLConnection的getInputStream()这个函数里面才正式发送出去。 </div><div class="line">* </div><div class="line">* 对HttpURLConnection对象的一切配置都必须要在connect()函数执行之前完成。 </div><div class="line">* 而对outputStream的写操作，又必须要在inputStream的读操作之前。 </div><div class="line">* 这些顺序实际上是由http请求的格式决定的。 </div><div class="line">* </div><div class="line">* 在http头后面紧跟着的是http请求的正文，正文的内容是通过outputStream流写入的， </div><div class="line">* 实际上outputStream不是一个网络流，充其量是个字符串流，往里面写入的东西不会立即发送到网络， </div><div class="line">* 而是存在于内存缓冲区中，待outputStream流关闭时，根据输入的内容生成http正文。 </div><div class="line">* 至此，http请求的东西已经全部准备就绪。在getInputStream()函数调用的时候，就会把准备好的http请求 </div><div class="line">* 正式发送到服务器了，然后返回一个输入流，用于读取服务器对于此次http请求的返回信息。由于http </div><div class="line">* 请求在getInputStream的时候已经发送出去了（包括http头和正文），因此在getInputStream()函数 </div><div class="line">* 之后对connection对象进行设置（对http头的信息进行修改）或者写入outputStream（对正文进行修改） </div><div class="line">* 都是没有意义的了，执行这些操作会导致异常的发生。 </div><div class="line">* </div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p>HttpUrlConnection在单点登录系统中用来发送登出请求，这部分，我是照着JASIG CAS源码来的。</p>
+<p>##8.单点免登实现以及FileWatchDog的实现<br>1.免登通过正则实现<br>2.免登配置通过FileWatchDog，我照着log4j源码写的，思路和log4j定时更新log4j.xml和log4j.properties配置文件是几乎是一样的。<br>a.写一个listener，并在web.xml中配置<br>b.配置两个参数，一个是文件名，一个是刷新频率<br>c.写一个抽象类FileWatchDog，继承Thread类，实现run方法，写一个protected的配置方法，当文件的最后修改时间变动了，调用abstract doOnChange()方法，实际的处理会在子类中实现（多态）。FileWatchDog会在后台定时扫描配置文件是否有改动，有改动就重新配置。</p>
+<p>碰到的问题：有的时候启动不能找到配置文件，同事接入的时候发现有这个问题，她用绝对路径解决了这个问题，错误原因可能是classroader加载路径的原因。</p>
+</span>
+				</header>
+
+				<!-- share -->
+				
+					
+
+					
+     <footer class="entry-meta">      
+
+	    <div class="fenlei" style="font-size:13.5px">
+			<span class="entry-categories">
+				<span class="fa fa-folder" aria-hidden="true"></span> 
+
+				
+					<a href="/categories/项目经验/">项目经验</a>
+				
+
+			</span>
+			
+			<span class="entry-tags">        
+				<span class="fa fa-tags" aria-hidden="true"></span> 
+
+				
+					<a href="/tags/项目总结，单点登录/">项目总结，单点登录</a>&nbsp;
+				
+
+			</span>
+		</div>
+
+     
+		<!-- JiaThis Button BEGIN -->
+		<div class="jiathis_style" style="float:right;">
+			<span class="jiathis_txt">分享到：</span>
+			<a class="jiathis_button_qzone">QQ空间</a>
+			<a class="jiathis_button_tsina">新浪微博</a>
+			<a class="jiathis_button_weixin">微信</a>
+			<a class="jiathis_button_copy">复制</a>
+			<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+			<a class="jiathis_counter_style"></a>
+		</div>
+		<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+		<!-- JiaThis Button END -->
+		<br>
+    </footer>
+
+
+				
+			</div>	
+		</div>	 	        
+
+		 
+				
+					<p class="p1">上一篇 <a href="/2015/03/11/并发学习执行情况/">并发学习执行情况</a></p> 
+
+				
+				   <p class="p2">下一篇 <a href="/2015/03/05/单点登录系统/">单点登录系统</a></p> 
+			
+		
+		<!-- comment -->
+		
+<section id="comment">
+  
+  	 <div class="ds-thread" data-thread-key="2015/03/09/单点登录技术细节/" data-title="单点登录技术细节" data-url="http://blog.oryza.cn/2015/03/09/单点登录技术细节/"></div>  
+  
+</section>
+
+		
+	</div> <!-- col-md-9/col-md-12 -->	
+
+	
+		<div id="side_meta">
+			
+      <div class="col-md-3">
+	      <div id="sidebar">
+	      
+  <div class="form-group has-success has-feedback" id="site_search">
+    <form class="site-search-form">
+        <input type="text" id="st-search-input" name="q" results="0" placeholder="搜索" class="st-search-input st-default-search-input form-control" />
+    </form>
+  </div>  
+
+	      <style type="text/css">
+  .cls_container{height:24px;overflow:hidden;}
+  .cls_container ul{list-style-type:none;margin:0;padding:0;margin-left:0px;}
+  .cls_container ul li{height:24px;line-height:24px;float:left;display:inline;}
+</style>
+
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">本站公告</h4>
+
+	<div id="myscroll" class="cls_container">
+		<ul>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		</ul>
+	</div>
+
+	<div id="showhint"></div>
+</div>
+
+<script type="text/javascript">
+	function $(element){
+	 if(arguments.length>1){
+	  for(var i=0,length=arguments.length,elements=[];i<length;i++){
+	   elements.push($(arguments[i]));
+	  }
+	  return elements;
+	 }
+	 if(typeof element=="string"){
+	  return document.getElementById(element);
+	 }else{
+	  return element;
+	 }
+	}
+	var Class={
+	 create:function(){
+	  return function(){
+	   this.initialize.apply(this,arguments);
+	  }
+	 }
+	}
+	Function.prototype.bind=function(object){
+	 var method=this;
+	 return function(){
+	  method.apply(object,arguments);
+	 }
+	}
+	var Scroll=Class.create();
+	Scroll.prototype={
+	 initialize:function(element,height){
+	  this.element=$(element);
+	  this.element.innerHTML+=this.element.innerHTML;
+	  this.height=height;
+	  this.maxHeight=this.element.scrollHeight/2;
+	  this.counter=0;
+	  this.scroll();
+	  this.timer="";
+	  this.element.onmouseover=this.stop.bind(this);
+	  this.element.onmouseout=function(){this.timer=setTimeout(this.scroll.bind(this),1000);}.bind(this);
+	 },
+	 scroll:function(){
+	  if(this.element.scrollTop<this.maxHeight){
+	   this.element.scrollTop++;
+	   this.counter++;
+	  }else{
+	   this.element.scrollTop=0;
+	   this.counter=0;
+	  }
+	  if(this.counter<this.height){
+	   this.timer=setTimeout(this.scroll.bind(this),20);
+	  }else{
+	   this.counter=0;
+	   this.timer=setTimeout(this.scroll.bind(this),3000);
+	  }
+	 },
+	 stop:function(){
+	  clearTimeout(this.timer);
+	 }
+	}
+	var myscroll=new Scroll("myscroll",24);
+</script>
+
+
+	      <!-- toc -->	      
+	      	      
+
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">分类目录</h4>
+		<ul class="tag_box inline list-unstyled">
+		
+			<li><a href="/categories/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/categories/python/">python<span>1</span></a></li>
+		
+			<li><a href="/categories/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/categories/坑/">坑<span>1</span></a></li>
+		
+			<li><a href="/categories/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/categories/并发学习/">并发学习<span>1</span></a></li>
+		
+			<li><a href="/categories/我的翻译/">我的翻译<span>1</span></a></li>
+		
+			<li><a href="/categories/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/categories/测试/">测试<span>1</span></a></li>
+		
+			<li><a href="/categories/项目经验/">项目经验<span>2</span></a></li>
+		
+		</ul>
+	</div>
+	
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333 ">标签云</h4>
+		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/服务器架构/">服务器架构<span>1</span></a></li>
+		
+			<li><a href="/tags/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/tags/EJB-EntityManager-JPA-Datasource/">EJB EntityManager JPA Datasource<span>1</span></a></li>
+		
+			<li><a href="/tags/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结，单点登录/">项目总结，单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/hadoop/">hadoop<span>1</span></a></li>
+		
+			<li><a href="/tags/elasticsearch/">elasticsearch<span>1</span></a></li>
+		
+			<li><a href="/tags/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/tags/zookeeper/">zookeeper<span>1</span></a></li>
+		
+			<li><a href="/tags/性能测试/">性能测试<span>1</span></a></li>
+		
+			<li><a href="/tags/性能监控/">性能监控<span>1</span></a></li>
+		
+			<li><a href="/tags/which/">which<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结/">项目总结<span>1</span></a></li>
+		
+			<li><a href="/tags/redis，缓存/">redis，缓存<span>1</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/tags/并发/">并发<span>1</span></a></li>
+		
+			<li><a href="/tags/kafka/">kafka<span>1</span></a></li>
+		
+			<li><a href="/tags/ab/">ab<span>1</span></a></li>
+		
+			<li><a href="/tags/storm/">storm<span>1</span></a></li>
+		
+			<li><a href="/tags/JVM，垃圾收集器，HotSpot/">JVM，垃圾收集器，HotSpot<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>21</span></a></li>
+		 
+		</ul>
+	</div>
+
+
+	      
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">友情链接</h4>
+	<ul class="blogroll list-unstyled">
+	
+		<li style="font-size:14px"><i class="fa fa-share"></i><a href="http://hexo.io" title="Hexo site." target="_blank"]);">Hexo</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-github"></i><a href="https://github.com/AhahaGe" title="My Github account." target="_blank"]);">我的github</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-cloud-upload"></i><a href="http://www.qiniu.com" title="My Weibo account." target="_blank"]);">七牛云存储</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-chain"></i><a href="https://github.com/rudy-yuan/free2mind" title="free2mind theme." target="_blank"]);">Hexo-Theme-Free2mind</a></li>
+	
+	</ul>
+</div>
+
+
+	      <div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">近期评论</h4>
+	<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="0" data-show-admin="1" data-excerpt-length="100" ></ul>
+	
+	<script type="text/javascript">
+	    var duoshuoQuery = { short_name: 'blogoryza' };
+	    (function() {
+	    var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+
+</div>
+
+
+	
+	      <section id="recent-visitors" class="widget widget_recent_comments">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">最近访客</h4>
+  	<div class="panelbody clearfix"><ul class="ds-recent-visitors" data-num-items="30"></ul></div>
+</section>    
+	      </div> <!-- sidebar -->
+      </div> <!-- col-md-3 -->
+
+		</div>
+			
+
+</div><!-- row -->
+
+
+	<script type="text/javascript">
+	  var duoshuoQuery = { short_name: 'blogoryza' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  AhahaGe &copy; 2015-2016.
+  
+       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, <a href="https://swiftype.com/" target="_blank">Swiftype</a> and <a href="http://www.qiniu.com/" target="_blank">七牛云存储</a>.
+      <i class="fa fa-sitemap %>"></i> <a href="/sitemap.xml" target="_blank"> 站点地图</a>. <a href="http://www.miitbeian.gov.cn/">浙ICP备14039723号-1</a>.
+      
+      
+      <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259907039'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1259907039%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WSRpFx1x7aC6s9oHyBKz','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>

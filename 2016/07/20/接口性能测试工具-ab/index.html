@@ -1,0 +1,544 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>接口性能测试工具-ab | 稻子网博客</title>
+  <meta name="author" content="AhahaGe">
+  
+  <meta name="description" content="稻子网博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="接口性能测试工具-ab"/>
+  <meta property="og:site_name" content="稻子网博客"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+  
+    <link href="/favicon.ico" rel="icon">
+  
+
+  <!-- CSS -->
+
+
+  <link rel="stylesheet" href="/css/themes/cerulean.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">稻子网博客</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>文章归档
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/message" title="All the tags.">
+			  <i class="fa fa-pencil"></i>给我留言
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-info-circle"></i>关于本站
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+		<!-- content -->
+
+		<div class="slogan" style="margin-bottom: 17px">
+		  <h4 style="margin-top: 0;color: #333;font-size:15px;font-weight: normal;">
+			  当前位置&nbsp;:&nbsp;<a href="/" >首页&nbsp;</a>»&nbsp;文章分类&nbsp;:&nbsp;
+			
+				<a href="/categories/测试/">测试</a>
+			
+		  &nbsp;</a>»&nbsp; 接口性能测试工具-ab </h4>
+		</div>
+
+		<div id="top_search"></div>
+				 
+		
+
+		<div class="archive">	  
+			<div id="archives"> 
+				
+				<header class="entry-header">
+					<div class="entry-info" text-transform : capitalize>				     					      	      
+							
+						<span class="entry-date">
+							<span class="fa fa-calendar" aria-hidden="true"></span>
+							2016-07-20						      
+						</span>
+							  
+							  
+						<span class="author vcard">
+							<span class="fa fa-user" aria-hidden="true"></span>
+							<a href="/">AhahaGe</a> 	 	
+						</span>
+
+						<span class="comments-link">
+							<span class="fa fa-comments" aria-hidden="true"></span>
+							<span class="ds-thread-count" data-thread-key="2016/07/20/接口性能测试工具-ab/">暂无评论</span>
+						</span>						
+							
+					</div>	
+
+									
+					<h3 class="entry-title"> 
+						<a href="/2016/07/20/接口性能测试工具-ab/" >接口性能测试工具-ab</a>
+					</h3>		
+						
+					<span style="font-size:15px"><p>&#160; &#160; &#160; &#160;ab是一款非常简单易用的接口性能测试工具。本文简介了ab的原理，安装以及简单使用。<br><a id="more"></a></p>
+<h2 id="1-ab的原理"><a href="#1-ab的原理" class="headerlink" title="1. ab的原理"></a><strong>1. ab的原理</strong></h2><p>&#160; &#160; &#160; &#160;ab命令会创建多个并发访问线程，模拟多个访问者同时对某一URL地址进行访问。它的测试目标是基于URL的。因此，它既可以用来测试apache的负载压力，也可以测试nginx、lighthttp、tomcat、iis等其它web服务器的压力。</p>
+<p>&#160; &#160; &#160; &#160;ab命令对发出负载的计算机要求很低，他既不会占用很高的cpu，也不会占用很高的内存。但却会给目标服务器造成巨大的负载，其原理类似cc攻击。自己测试也需要注意，避免导致死机。</p>
+<h2 id="2-ab的安装"><a href="#2-ab的安装" class="headerlink" title="2. ab的安装"></a><strong>2. ab的安装</strong></h2><p>&#160; &#160; &#160; &#160;centos通过yum安装</p>
+<blockquote>
+<p>[root@ArcVideo webbench-1.5]# yum -y install httpd-tools<br>which ab<br>/usr/bin/ab<br>[root@ArcVideo webbench-1.5]# ab -V<br>This is ApacheBench, Version 2.3 &lt;$Revision: 655654 $&gt;<br>Copyright 1996 Adam Twiss, Zeus Technology Ltd, <a href="http://www.zeustech.net/" target="_blank" rel="external">http://www.zeustech.net/</a><br>Licensed to The Apache Software Foundation, <a href="http://www.apache.org/" target="_blank" rel="external">http://www.apache.org/</a></p>
+</blockquote>
+<h2 id="3-ab参数说明"><a href="#3-ab参数说明" class="headerlink" title="3. ab参数说明"></a><strong>3. ab参数说明</strong></h2><blockquote>
+<p>[root@ArcVideo webbench-1.5]# ab –help<br>ab: wrong number of arguments<br>Usage: ab [options] [http[s]://]hostname[:port]/path<br>Options are:<br>    -n requests     Number of requests to perform<br>    在测试会话中所执行的请求个数。默认时，仅执行一个请求。<br>    -c concurrency  Number of multiple requests to make<br>    一次产生的请求个数。默认是一次一个。<br>    -t timelimit    Seconds to max. wait for responses<br>    测试所进行的最大秒数。其内部隐含值是-n 50000，它可以使对服务器的测试限制在一个固定的总时间以内。默认时，没有时间限制。<br>    -b windowsize   Size of TCP send/receive buffer, in bytes<br>    -p postfile     File containing data to POST. Remember also to set -T<br>    -u putfile      File containing data to PUT. Remember also to set -T<br>    -T content-type Content-type header for POSTing, eg.<br>                    ‘application/x-www-form-urlencoded’<br>                    Default is ‘text/plain’<br>    -v verbosity    How much troubleshooting info to print<br>    -w              Print out results in HTML tables<br>    -i              Use HEAD instead of GET<br>    -x attributes   String to insert as table attributes<br>    -y attributes   String to insert as tr attributes<br>    -z attributes   String to insert as td or th attributes<br>    -C attribute    Add cookie, eg. ‘Apache=1234. (repeatable)<br>    -H attribute    Add Arbitrary header line, eg. ‘Accept-Encoding: gzip’<br>                    Inserted after all normal header lines. (repeatable)<br>    -A attribute    Add Basic WWW Authentication, the attributes<br>                    are a colon separated username and password.<br>    -P attribute    Add Basic Proxy Authentication, the attributes<br>                    are a colon separated username and password.<br>    -X proxy:port   Proxyserver and port number to use<br>    -V              Print version number and exit<br>    -k              Use HTTP KeepAlive feature<br>    -d              Do not show percentiles served table.<br>    -S              Do not show confidence estimators and warnings.<br>    -g filename     Output collected data to gnuplot format file.<br>    -e filename     Output CSV file with percentages served<br>    -r              Don’t exit on socket receive errors.<br>    -h              Display usage information (this message)<br>    -Z ciphersuite  Specify SSL/TLS cipher suite (See openssl ciphers)<br>    -f protocol     Specify SSL/TLS protocol (SSL2, SSL3, TLS1, or ALL)</p>
+</blockquote>
+<h2 id="4-ab性能指标"><a href="#4-ab性能指标" class="headerlink" title="4. ab性能指标"></a><strong>4. ab性能指标</strong></h2><h3 id="吞吐率"><a href="#吞吐率" class="headerlink" title="吞吐率"></a>吞吐率</h3><p>&#160; &#160; &#160; &#160;服务器并发处理能力的量化描述，单位是reqs/s，指的是某个并发用户数下单位时间内处理的请求数。某个并发用户数下单位时间内能处理的最大请求数，称为最大吞吐率。</p>
+<blockquote>
+<p>吞吐率是基于并发用户数的：a.吞吐率和并发用户数相关 b.不同的并发用户数下，吞吐率一般是不同的</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160;计算公式：总请求数/处理完成这些请求数所花费的时间，即 Request per second = Complete requests / Time taken for tests， 这个值越大表示当前机器的整体性能越好。</p>
+<h3 id="并发连接数"><a href="#并发连接数" class="headerlink" title="并发连接数"></a>并发连接数</h3><p>&#160; &#160; &#160; &#160;并发连接数指的是某个时刻服务器所接受的请求数目，简单的讲，就是一个会话。</p>
+<h3 id="并发用户数"><a href="#并发用户数" class="headerlink" title="并发用户数"></a>并发用户数</h3><p>&#160; &#160; &#160; &#160;一个用户可能同时会产生多个会话。在Http1.1下，<a href="http://www.tuicool.com/articles/UnUVZj" target="_blank" rel="external">浏览器的并发请求</a>数有限制，并发用户数等于并发连接数除以浏览器的并发请求数。</p>
+<blockquote>
+<p>[测试你的浏览器并发数]工具(<a href="http://developer.oncecode.com/comet/" target="_blank" rel="external">http://developer.oncecode.com/comet/</a>)</p>
+</blockquote>
+<h3 id="用户平均请求等待时间"><a href="#用户平均请求等待时间" class="headerlink" title="用户平均请求等待时间"></a>用户平均请求等待时间</h3><p>&#160; &#160; &#160; &#160;计算公式：处理完请求所花费的总时间/(总请求数/并发用户数)，即：Time per request=Time taken for tests/（Complete requests/Concurrency Level）</p>
+<h3 id="服务器平均请求等待时间"><a href="#服务器平均请求等待时间" class="headerlink" title="服务器平均请求等待时间"></a>服务器平均请求等待时间</h3><p>&#160; &#160; &#160; &#160;计算公式： 处理完成所有请求数所花费的时间/总请求数，即：Time taken for/testsComplete requests</p>
+<h2 id="5-ab实际使用"><a href="#5-ab实际使用" class="headerlink" title="5. ab实际使用"></a><strong>5. ab实际使用</strong></h2><p>&#160; &#160; &#160; &#160;ab的命令参数比较多，我们经常使用的是-c和-n参数。 -n是总请求数，-c是并发连接数，每秒发起的请求数，如果是测试接口，就可以理解为并发用户数。 -c值不同，吞吐量等值都会不同，测试的结果就不一样。</p>
+<blockquote>
+<p>ab -n 100000 -c 200  <a href="http://172.17.230.131:8080/server/v2/acquisition/recordH5FlashContent" target="_blank" rel="external">http://172.17.230.131:8080/server/v2/acquisition/recordH5FlashContent</a></p>
+</blockquote>
+<figure class="highlight plain"><figcaption><span>Software:        Apache-Coyote/1.1</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">Server Hostname:        172.17.230.131</div><div class="line">Server Port:            8080</div><div class="line"></div><div class="line">Document Path:          /server/v2/acquisition/recordH5FlashContent</div><div class="line">Document Length:        5 bytes</div><div class="line"></div><div class="line">Concurrency Level:      200</div><div class="line">Time taken for tests:   26.199 seconds</div><div class="line">Complete requests:      100000</div><div class="line">Failed requests:        0</div><div class="line">Write errors:           0</div><div class="line">Total transferred:      15300000 bytes</div><div class="line">HTML transferred:       500000 bytes</div><div class="line">Requests per second:    3816.92 [#/sec] (mean)</div><div class="line">Time per request:       52.398 [ms] (mean)</div><div class="line">Time per request:       0.262 [ms] (mean, across all concurrent requests)</div><div class="line">Transfer rate:          570.30 [Kbytes/sec] received</div><div class="line"></div><div class="line">Connection Times (ms)</div><div class="line">              min  mean[+/-sd] median   max</div><div class="line">Connect:        0    0  18.7      0    1000</div><div class="line">Processing:     0   52  55.6     33     229</div><div class="line">Waiting:        0   52  55.6     33     229</div><div class="line">Total:          0   52  58.5     33    1036</div><div class="line"></div><div class="line">Percentage of the requests served within a certain time (ms)</div><div class="line">  50%     33</div><div class="line">  66%     54</div><div class="line">  75%     82</div><div class="line">  80%    102</div><div class="line">  90%    147</div><div class="line">  95%    173</div><div class="line">  98%    190</div><div class="line">  99%    197</div><div class="line"> 100%   1036 (longest request)</div></pre></td></tr></table></figure>
+<h2 id="6-可能遇到的问题"><a href="#6-可能遇到的问题" class="headerlink" title="6. 可能遇到的问题"></a><strong>6. 可能遇到的问题</strong></h2><h4 id="问题一、socket-Too-many-open-files-24"><a href="#问题一、socket-Too-many-open-files-24" class="headerlink" title="问题一、socket: Too many open files (24)"></a>问题一、socket: Too many open files (24)</h4><p> 解决（在测试服务器操作）：</p>
+<blockquote>
+<p>1、查看当前系统设置：open files (-n) 1024为1024<br>[root@localhost ~]# ulimit -a<br>core file size (blocks, -c) 0<br>data seg size (kbytes, -d) unlimited<br>scheduling priority (-e) 0<br>file size (blocks, -f) unlimited<br>pending signals (-i) 7844<br>max locked memory (kbytes, -l) 64<br>max memory size (kbytes, -m) unlimited<br>open files (-n) 1024<br>pipe size (512 bytes, -p) 8<br>POSIX message queues (bytes, -q) 819200<br>real-time priority (-r) 0<br>stack size (kbytes, -s) 10240<br>cpu time (seconds, -t) unlimited<br>max user processes (-u) 1024<br>virtual memory (kbytes, -v) unlimited<br>file locks (-x) unlimited</p>
+<p>2、修改默认值：<br>临时生效：<br>[root@localhost ~]# ulimit -n 65536<br>永久生效：<br>/etc/security/limits.conf文件中添加以下两行后重新登陆</p>
+<ul>
+<li>soft nofile 65536</li>
+<li>hard nofile 65536</li>
+</ul>
+<p>3、查看修改结果<br>[root@localhost ~]# ulimit -n<br>65536</p>
+</blockquote>
+<h4 id="问题二、"><a href="#问题二、" class="headerlink" title="问题二、"></a>问题二、</h4><p> &#160; &#160; &#160; &#160;ab实际执行的请求如果只有一部分，说明我们的系统达不到那么大的并发量，降低-c的值就可以了，或者把一个请求分到多个命令中执行。</p>
+<h4 id="问题三、"><a href="#问题三、" class="headerlink" title="问题三、"></a>问题三、</h4><p> &#160; &#160; &#160; &#160;ab的-c选项的参数最大到20000，如果想再大，只能修改源码再安装</p>
+<h4 id="问题四、"><a href="#问题四、" class="headerlink" title="问题四、"></a>问题四、</h4><p> &#160; &#160; &#160; &#160;-c选项的参数不能大于-n的参数</p>
+<h4 id="问题五、"><a href="#问题五、" class="headerlink" title="问题五、"></a>问题五、</h4><p> &#160; &#160; &#160; &#160;ab命令需要在其它服务器执行，本地执行会忽略服务器通信的时间。</p>
+<h2 id="7-小结"><a href="#7-小结" class="headerlink" title="7. 小结"></a><strong>7. 小结</strong></h2><p> &#160; &#160; &#160; &#160;做为一个java后台开发人员，可以使用ab做接口性能测试工具，完全够了。webbench也可以用来做测试，基本差不多。如果要做复杂的专业的测试，例如需要测试并发用户测试，或者是需要用上次接口的结果来做输入测试一个完整的流程，或者想要得到更直观图表啊更详细的结果，最好还是用loadRunner或其他更专业的工具。</p>
+</span>
+				</header>
+
+				<!-- share -->
+				
+					
+
+					
+     <footer class="entry-meta">      
+
+	    <div class="fenlei" style="font-size:13.5px">
+			<span class="entry-categories">
+				<span class="fa fa-folder" aria-hidden="true"></span> 
+
+				
+					<a href="/categories/测试/">测试</a>
+				
+
+			</span>
+			
+			<span class="entry-tags">        
+				<span class="fa fa-tags" aria-hidden="true"></span> 
+
+				
+					<a href="/tags/性能测试/">性能测试</a>&nbsp;
+				
+					<a href="/tags/ab/">ab</a>&nbsp;
+				
+
+			</span>
+		</div>
+
+     
+		<!-- JiaThis Button BEGIN -->
+		<div class="jiathis_style" style="float:right;">
+			<span class="jiathis_txt">分享到：</span>
+			<a class="jiathis_button_qzone">QQ空间</a>
+			<a class="jiathis_button_tsina">新浪微博</a>
+			<a class="jiathis_button_weixin">微信</a>
+			<a class="jiathis_button_copy">复制</a>
+			<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+			<a class="jiathis_counter_style"></a>
+		</div>
+		<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+		<!-- JiaThis Button END -->
+		<br>
+    </footer>
+
+
+				
+			</div>	
+		</div>	 	        
+
+		 
+				
+					<p class="p1">上一篇 <a href="/2016/07/20/linux命令 which/">linux命令 which</a></p> 
+
+				
+				   <p class="p2">下一篇 <a href="/2016/07/18/大数据环境搭建-elasticsearch/">大数据环境搭建-elasticsearch</a></p> 
+			
+		
+		<!-- comment -->
+		
+<section id="comment">
+  
+  	 <div class="ds-thread" data-thread-key="2016/07/20/接口性能测试工具-ab/" data-title="接口性能测试工具-ab" data-url="http://blog.oryza.cn/2016/07/20/接口性能测试工具-ab/"></div>  
+  
+</section>
+
+		
+	</div> <!-- col-md-9/col-md-12 -->	
+
+	
+		<div id="side_meta">
+			
+      <div class="col-md-3">
+	      <div id="sidebar">
+	      
+  <div class="form-group has-success has-feedback" id="site_search">
+    <form class="site-search-form">
+        <input type="text" id="st-search-input" name="q" results="0" placeholder="搜索" class="st-search-input st-default-search-input form-control" />
+    </form>
+  </div>  
+
+	      <style type="text/css">
+  .cls_container{height:24px;overflow:hidden;}
+  .cls_container ul{list-style-type:none;margin:0;padding:0;margin-left:0px;}
+  .cls_container ul li{height:24px;line-height:24px;float:left;display:inline;}
+</style>
+
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">本站公告</h4>
+
+	<div id="myscroll" class="cls_container">
+		<ul>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-eye"></i>欢迎访问稻子网!</span></li></br>
+		  <li><span style="color:red"><i class="fa fa-calendar"></i>今天是2016年7月25日。</span></li></br>
+		</ul>
+	</div>
+
+	<div id="showhint"></div>
+</div>
+
+<script type="text/javascript">
+	function $(element){
+	 if(arguments.length>1){
+	  for(var i=0,length=arguments.length,elements=[];i<length;i++){
+	   elements.push($(arguments[i]));
+	  }
+	  return elements;
+	 }
+	 if(typeof element=="string"){
+	  return document.getElementById(element);
+	 }else{
+	  return element;
+	 }
+	}
+	var Class={
+	 create:function(){
+	  return function(){
+	   this.initialize.apply(this,arguments);
+	  }
+	 }
+	}
+	Function.prototype.bind=function(object){
+	 var method=this;
+	 return function(){
+	  method.apply(object,arguments);
+	 }
+	}
+	var Scroll=Class.create();
+	Scroll.prototype={
+	 initialize:function(element,height){
+	  this.element=$(element);
+	  this.element.innerHTML+=this.element.innerHTML;
+	  this.height=height;
+	  this.maxHeight=this.element.scrollHeight/2;
+	  this.counter=0;
+	  this.scroll();
+	  this.timer="";
+	  this.element.onmouseover=this.stop.bind(this);
+	  this.element.onmouseout=function(){this.timer=setTimeout(this.scroll.bind(this),1000);}.bind(this);
+	 },
+	 scroll:function(){
+	  if(this.element.scrollTop<this.maxHeight){
+	   this.element.scrollTop++;
+	   this.counter++;
+	  }else{
+	   this.element.scrollTop=0;
+	   this.counter=0;
+	  }
+	  if(this.counter<this.height){
+	   this.timer=setTimeout(this.scroll.bind(this),20);
+	  }else{
+	   this.counter=0;
+	   this.timer=setTimeout(this.scroll.bind(this),3000);
+	  }
+	 },
+	 stop:function(){
+	  clearTimeout(this.timer);
+	 }
+	}
+	var myscroll=new Scroll("myscroll",24);
+</script>
+
+
+	      <!-- toc -->	      
+	      	      
+
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">分类目录</h4>
+		<ul class="tag_box inline list-unstyled">
+		
+			<li><a href="/categories/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/categories/python/">python<span>1</span></a></li>
+		
+			<li><a href="/categories/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/categories/坑/">坑<span>1</span></a></li>
+		
+			<li><a href="/categories/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/categories/并发学习/">并发学习<span>1</span></a></li>
+		
+			<li><a href="/categories/我的翻译/">我的翻译<span>1</span></a></li>
+		
+			<li><a href="/categories/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/categories/测试/">测试<span>1</span></a></li>
+		
+			<li><a href="/categories/项目经验/">项目经验<span>2</span></a></li>
+		
+		</ul>
+	</div>
+	
+	      
+	<div class="widget">
+		<h4 style="font-weight: bold; color: #333 ">标签云</h4>
+		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/JVM，垃圾收集器，HotSpot/">JVM，垃圾收集器，HotSpot<span>1</span></a></li>
+		
+			<li><a href="/tags/linux命令/">linux命令<span>1</span></a></li>
+		
+			<li><a href="/tags/which/">which<span>1</span></a></li>
+		
+			<li><a href="/tags/ab/">ab<span>1</span></a></li>
+		
+			<li><a href="/tags/单点登录/">单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/大数据/">大数据<span>6</span></a></li>
+		
+			<li><a href="/tags/storm/">storm<span>1</span></a></li>
+		
+			<li><a href="/tags/EJB-EntityManager-JPA-Datasource/">EJB EntityManager JPA Datasource<span>1</span></a></li>
+		
+			<li><a href="/tags/并发/">并发<span>1</span></a></li>
+		
+			<li><a href="/tags/服务器架构/">服务器架构<span>1</span></a></li>
+		
+			<li><a href="/tags/技术尝试/">技术尝试<span>1</span></a></li>
+		
+			<li><a href="/tags/redis/">redis<span>1</span></a></li>
+		
+			<li><a href="/tags/redis，缓存/">redis，缓存<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结/">项目总结<span>1</span></a></li>
+		
+			<li><a href="/tags/hadoop/">hadoop<span>1</span></a></li>
+		
+			<li><a href="/tags/性能测试/">性能测试<span>1</span></a></li>
+		
+			<li><a href="/tags/性能监控/">性能监控<span>1</span></a></li>
+		
+			<li><a href="/tags/项目总结，单点登录/">项目总结，单点登录<span>1</span></a></li>
+		
+			<li><a href="/tags/elasticsearch/">elasticsearch<span>1</span></a></li>
+		
+			<li><a href="/tags/kafka/">kafka<span>1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span>21</span></a></li>
+		 
+		</ul>
+	</div>
+
+
+	      
+<div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">友情链接</h4>
+	<ul class="blogroll list-unstyled">
+	
+		<li style="font-size:14px"><i class="fa fa-share"></i><a href="http://hexo.io" title="Hexo site." target="_blank"]);">Hexo</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-github"></i><a href="https://github.com/AhahaGe" title="My Github account." target="_blank"]);">我的github</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-cloud-upload"></i><a href="http://www.qiniu.com" title="My Weibo account." target="_blank"]);">七牛云存储</a></li>
+	
+		<li style="font-size:14px"><i class="fa fa-chain"></i><a href="https://github.com/rudy-yuan/free2mind" title="free2mind theme." target="_blank"]);">Hexo-Theme-Free2mind</a></li>
+	
+	</ul>
+</div>
+
+
+	      <div class="widget">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">近期评论</h4>
+	<ul class="ds-recent-comments" data-num-items="5" data-show-avatars="1" data-show-time="0" data-show-admin="1" data-excerpt-length="100" ></ul>
+	
+	<script type="text/javascript">
+	    var duoshuoQuery = { short_name: 'blogoryza' };
+	    (function() {
+	    var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+		})();
+	</script>
+
+</div>
+
+
+	
+	      <section id="recent-visitors" class="widget widget_recent_comments">
+	<h4 style="font-weight: bold; color: #333;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif">最近访客</h4>
+  	<div class="panelbody clearfix"><ul class="ds-recent-visitors" data-num-items="30"></ul></div>
+</section>    
+	      </div> <!-- sidebar -->
+      </div> <!-- col-md-3 -->
+
+		</div>
+			
+
+</div><!-- row -->
+
+
+	<script type="text/javascript">
+	  var duoshuoQuery = { short_name: 'blogoryza' };
+	  (function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';
+		ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+	  })();
+	</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  AhahaGe &copy; 2015-2016.
+  
+       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, <a href="https://swiftype.com/" target="_blank">Swiftype</a> and <a href="http://www.qiniu.com/" target="_blank">七牛云存储</a>.
+      <i class="fa fa-sitemap %>"></i> <a href="/sitemap.xml" target="_blank"> 站点地图</a>. <a href="http://www.miitbeian.gov.cn/">浙ICP备14039723号-1</a>.
+      
+      
+      <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259907039'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1259907039%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WSRpFx1x7aC6s9oHyBKz','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+</body>
+   </html>
